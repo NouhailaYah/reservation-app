@@ -1,0 +1,190 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f5f5f5;
+}
+
+header {
+  background: linear-gradient(to right, #006d3b, #00aa66);
+  padding: 20px;
+  color: white;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.auth-links a {
+  color: white;
+  margin-left: 15px;
+  text-decoration: none;
+}
+
+#logout-btn {
+  background: white;
+  color: #006d3b;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.search-box {
+  background: white;
+  padding: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  margin: 20px;
+  border-radius: 10px;
+  background-image: url('background_vert.jpg') no-repeat center center/cover;
+}
+
+.search-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.search-fields input,
+.search-fields button {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  flex: 1;
+}
+
+.search-fields button {
+  background: #006d3b;
+  color: white;
+  cursor: pointer;
+}
+
+.apartments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.appartement-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+  padding-bottom: 10px;
+}
+
+.appartement-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.modal {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80%;
+  overflow-y: auto;
+}
+
+.modal .close {
+  float: right;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.gallery img {
+  width: 100px;
+  border-radius: 5px;
+}
+
+
+.form-container {
+  max-width: 400px;
+  margin: 50px auto;
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.form-container h2 {
+  color: #006d3b;
+  margin-bottom: 20px;
+}
+
+.form-container input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.form-container button {
+  background-color: #006d3b;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.form-container .message {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.form-container .message a {
+  color: #00aa66;
+  text-decoration: none;
+}
+
+#preReservationForm {
+  background-color: #f5faff;
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px auto;
+  max-width: 500px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+#preReservationForm input,
+#preReservationForm label,
+#preReservationForm button {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+
