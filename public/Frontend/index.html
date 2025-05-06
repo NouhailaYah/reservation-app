@@ -56,17 +56,15 @@
   <div id="appartements" class="apartments-grid"></div>
 
   <div class="modal-overlay" id="modal">
-    <div class="modal" style="display:none;">
+    <div class="modal">
       <span class="close" onclick="fermerModal()">&times;</span>
       <h2 id="modal-title">Détails</h2>
       <div id="modal-description"></div>
       <div id="modal-images" class="gallery"></div>
-      <button onclick="reserver(apartmentId)">Réserver</button>
     </div>
   </div>
-  <div id="preReservationForm" style="display: none;">
+  <div id="preReservationContainer" style="display: none;">
     <h2>Formulaire de pré-réservation</h2>
-
     <form id="preReservationForm">
       <label>CIN :</label>
       <input type="text" name="CIN" required><br>
@@ -99,7 +97,7 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script src="script.js" defer></script>
   
 </body>
 </html>
