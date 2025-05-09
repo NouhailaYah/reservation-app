@@ -34,7 +34,35 @@ class PreReservationController extends Controller
             return response()->json(['message' => 'Une seule réservation par an est autorisée'], 403);
         }
         
-        return PreReservation::create($request->all());
+        $data = $request->all();
+        $data['status'] = 'en_attente';
+        
+        $preReservation = PreReservation::create($data);
+        
+        return response()->json([
+            'message' => 'Pré-réservation envoyée. En attente de validation.',
+            'pre_reservation' => $preReservation,
+        ]);
+        
     }
+
+    public function valider($id)
+    {
+        $preReservation = PreReservation::findOrFail($id);
+        $preReservation->status = 'validée';
+        $preReservation->save();
+    
+        return response()->json(['message' => 'Pré-réservation validée']);
+    }
+    
+    public function refuser($id)
+    {
+        $preReservation = PreReservation::findOrFail($id);
+        $preReservation->status = 'refusée';
+        $preReservation->save();
+    
+        return response()->json(['message' => 'Pré-réservation refusée']);
+    }
+    
 }
 

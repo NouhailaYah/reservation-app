@@ -8,13 +8,89 @@ function handleModalClick(event) {
   }
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+  const token = localStorage.getItem("token");
+  const authLinks = document.getElementById("auth-links");
+  const logoutBtn = document.getElementById("logout-btn");
+
+  if (token) {
+    authLinks.style.display = "none";
+    logoutBtn.style.display = "inline-block";
+  }
+
+  logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("token");
+    location.reload();
+  });
+});
+
 document.querySelectorAll('.modal-overlay').forEach(modal => {
   modal.addEventListener('click', handleModalClick);
 });
 
+// Lorsque l'utilisateur sélectionne une ville
+document.getElementById("ville").addEventListener("change", function () {
+  const ville = this.value;
+  afficherPeriodeEtAppartements(ville);
+});
+
+// Fonction pour afficher les périodes et les appartements d'une ville
+function afficherPeriodeEtAppartements(ville) {
+  if (!ville) {
+    document.getElementById("periode").innerText = "Sélectionnez une ville pour voir les périodes disponibles.";
+    document.getElementById("appartements").innerHTML = "";
+    return;
+  }
+
+  fetch(`http://localhost:8000/api/villes/${ville}/periode-et-appartements`)
+    .then(response => response.json())
+    .then(data => {
+      // Afficher la période
+      const periodeDisplay = document.getElementById("periode");
+      if (data.periode) {
+        const dateDebut = new Date(data.periode.date_debut);
+        const dateFin = new Date(data.periode.date_fin);
+        const maintenant = new Date();
+
+        // Vérifier si la période est expirée
+        if (dateFin < maintenant) {
+          periodeDisplay.innerHTML = `<span style="color: gray;">Période expirée : du ${data.periode.date_debut} au ${data.periode.date_fin}</span>`;
+        } else {
+          periodeDisplay.innerText = `Disponible du ${data.periode.date_debut} au ${data.periode.date_fin}`;
+        }
+      } else {
+        periodeDisplay.innerText = "Aucune période disponible pour cette ville.";
+      }
+
+      // Afficher les appartements de la ville
+      const appartList = document.getElementById("appartements");
+      appartList.innerHTML = "";
+
+      if (data.appartements.length > 0) {
+        data.appartements.forEach(app => {
+          const div = document.createElement("div");
+          div.classList.add("appartement-card");
+          div.innerHTML = `
+            <h3>${app.nom}</h3>
+            <p>Capacité max : ${app.capacite_max} personnes</p>
+            <p>${app.superficie} m²</p>
+            <p>${app.nbr_chambre} chambre(s)</p>
+            <p><strong>${app.prix} DH / nuit</strong></p>
+            <button onclick="voirDetails('${encodeURIComponent(JSON.stringify(app))}')">Voir Détails</button>
+          `;
+          appartList.appendChild(div);
+        });
+      } else {
+        appartList.innerHTML = "<p>Aucun appartement disponible pour cette ville.</p>";
+      }
+    })
+    .catch(error => console.error("Erreur :", error));
+}
+
+// Fonction pour charger les appartements de manière générale
 function fetchAppartements(ville = '') {
   const API_URL = 'http://localhost:8000/api/appartements';
-  const IMAGE_BASE ='http://localhost:8000/images/'; 
+  const IMAGE_BASE = 'http://localhost:8000/images/';
 
   const imageMap = {
     Rabat: "appart1.jpg",
@@ -50,8 +126,13 @@ function fetchAppartements(ville = '') {
         container.innerHTML += card;
       });
     });
-    
 }
+
+// Charger les appartements par défaut (sans filtre)
+document.addEventListener("DOMContentLoaded", () => {
+  fetchAppartements();
+});
+
 
 function voirDetails(appartementJson) {
   const app = JSON.parse(decodeURIComponent(appartementJson));
@@ -70,14 +151,27 @@ function voirDetails(appartementJson) {
 
   title.textContent = `Appartement à ${app.nom_ville}`;
   description.innerHTML = `
-    <p><strong>Superficie :</strong> ${app.superficie} m²</p>
-    <p><strong>Chambres :</strong> ${app.nbr_chambre}</p>
-    <p><strong>Étage :</strong> ${app.etages}</p>
-    <p><strong>Salles de bain :</strong> ${app.nbr_salles_bain || '-'}</p>
-    <p><strong>Balcon :</strong> ${app.balcon ? "Oui" : "Non"}</p>
-    <p><strong>Climatisation :</strong> ${app.climatisation ? "Oui" : "Non"}</p>
-    <p><strong>Wi-Fi :</strong> ${app.wifi ? "Oui" : "Non"}</p>
-    <p><strong>Prix :</strong> ${app.prix} DH / nuit</p>
+    <p><strong>  Superficie :</strong> ${app.superficie} m²</p>
+    <p><strong>  Chambres :</strong> ${app.nbr_chambre}</p>
+    <p><strong>  Étage :</strong> ${app.etages}</p>
+    <p><strong>  Salles de bain :</strong> ${app.nbr_salles_bain || '-'}</p>
+    <p><strong>  Balcon :</strong> ${app.balcon ? "Oui" : "Non"}</p>
+    <p><strong>  Climatisation :</strong> ${app.climatisation ? "Oui" : "Non"}</p>
+    <p><strong>  Wi-Fi :</strong> ${app.wifi ? "Oui" : "Non"}</p>
+    <p><strong>  Prix :</strong> ${app.prix} DH / nuit</p>
+    <hr>
+    <h3>Détails de la Résidence</h3>
+    ${app.residence ? `
+      <p><strong>  Numero_résid :</strong> ${app.residence.id_resid}</p>
+      <p><strong>  Ville :</strong> ${app.residence.nom_ville}</p>
+      <p><strong>  Syndic :</strong> ${app.residence.syndic ? "Oui" : "Non"}</p>
+      <p><strong>  Piscine :</strong> ${app.residence.piscine ? "Oui" : "Non"}</p>
+      <p><strong>  Salle de sport :</strong> ${app.residence.salle_sport ? "Oui" : "Non"}</p>
+      <p><strong>  SPA :</strong> ${app.residence.spa ? "Oui" : "Non"}</p>
+      <p><strong>  Parking :</strong> ${app.residence.parking ? "Oui" : "Non"}</p>
+      <p><strong>  Ascenseur :</strong> ${app.residence.ascenseur ? "Oui" : "Non"}</p>
+      <p><strong>  Service de blanchisserie :</strong> ${app.residence.service_de_blanchisserie ? "Oui" : "Non"}</p>
+    ` : `<p>Aucune résidence associée.</p>`}
     <button onclick="reserver('${app.id}')">Réserver</button>
   `;
 
@@ -132,35 +226,50 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Formulaire de pré-réservation
-document.getElementById("formPreReservation")?.addEventListener("submit", function (e) {
+document.getElementById('preReservationForm').addEventListener('submit', function (e) {
   e.preventDefault();
   const formData = new FormData(this);
-  formData.append("status", "en_attente");
+  const data = Object.fromEntries(formData.entries());
 
-  fetch("http://localhost:8000/api/pre-reservations", {
-    method: "POST",
-    body: formData
+  fetch('http://localhost:8000/api/pre-reservations', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data)
   })
-    .then(res => res.ok ? res.json() : res.json().then(data => Promise.reject(data.message)))
-    .then(data => {
-      alert("Pré-réservation enregistrée !");
-      document.getElementById("reservationSection").style.display = "block";
-      document.getElementById("uploadRecuForm").dataset.id = data.id_pre_reser;
+    .then(res => res.json())
+    .then(res => {
+      alert(res.message || 'Pré-réservation effectuée');
+      localStorage.setItem('preReservationId', res.pre_reservation.id_pre_reser);
     })
-    .catch(err => alert(err));
+    .catch(err => alert('Erreur : ' + err));
 });
+
 
 // Envoi du reçu
-document.getElementById("uploadRecuForm")?.addEventListener("submit", function (e) {
+document.getElementById('uploadRecuForm').addEventListener('submit', function (e) {
   e.preventDefault();
-  const id = this.dataset.id;
-  const formData = new FormData(this);
 
-  fetch(`http://localhost:8000/api/reservations/upload-recu/${id}`, {
-    method: "POST",
-    body: formData
+  const reservationId = localStorage.getItem('reservationId');
+  if (!reservationId) {
+    alert("Aucune réservation trouvée. Veuillez refaire le processus.");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('recu_paiement', document.getElementById('recu_paiement').files[0]);
+
+  fetch(`http://localhost:8000/api/reservations/${reservationId}/upload-recu`, {
+    method: 'POST',
+    body: formData,
   })
-    .then(res => res.ok ? res.json() : Promise.reject("Erreur lors de l'envoi du reçu."))
-    .then(() => alert("Reçu envoyé avec succès !"))
-    .catch(err => alert(err));
+    .then(res => res.json())
+    .then(res => {
+      alert(res.message || 'Reçu envoyé avec succès.');
+    })
+    .catch(err => {
+      alert("Erreur lors de l'envoi du reçu : " + err.message);
+    });
 });
+

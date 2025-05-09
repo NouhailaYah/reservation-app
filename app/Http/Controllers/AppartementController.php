@@ -74,4 +74,14 @@ class AppartementController extends Controller
             'image' => $image,
         ]);
     }
+    public function show($id)
+    {
+        $appartement = Appartement::with('residence')->find($id);
+    
+        if (!$appartement) {
+            return response()->json(['message' => 'Appartement introuvable'], 404);
+        }
+    
+        return response()->json($appartement);
+    }
 }

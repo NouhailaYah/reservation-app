@@ -4,28 +4,34 @@ namespace App\Http\Controllers;
 
 use App\Models\Periode;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class PeriodeController extends Controller
 {
     public function index()
     {
-        return Periode::with('ville')->get();
+        $periodes = Periode::all();
+        return response()->json($periodes);
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'nom_ville' => 'required|exists:villes,nom_ville',
+        $validator = Validator::make($request->all(), [
+            'nom_ville' => 'required|string|exists:villes,nom_ville',
             'date_debut' => 'required|date',
-            'date_fin' => 'required|date|after_or_equal:date_debut',
+            'date_fin' => 'required|date|after_or_equal:date_debut'
         ]);
 
-        return Periode::create($request->all());
-    }
-    public function getPeriodesParVille($nom_ville)
-    {
-        return Periode::where('nom_ville', $nom_ville)->get();
-    }
-    
-}
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
+        $periode = Periode::create([
+            'nom_ville' => $request->nom_ville,
+            'date_debut' => $request->date_debut,
+            'date_fin' => $request->date_fin,
+        ]);
+
+        return response()->json(['message' => 'Période ajoutée avec succès', 'periode' => $periode]);
+    }
+}

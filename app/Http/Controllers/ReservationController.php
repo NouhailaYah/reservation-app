@@ -37,5 +37,24 @@ class ReservationController extends Controller
     
         return response()->json(['message' => 'Reçu téléchargé avec succès', 'path' => $path]);
     }
+
+    public function validerPaiement($id)
+    {
+        $reservation = Reservation::findOrFail($id);
+        $reservation->validation_admin = 'valide';
+        $reservation->save();
+    
+        return response()->json(['message' => 'Paiement validé par l\'admin']);
+    }
+    
+    public function refuserPaiement($id)
+    {
+        $reservation = Reservation::findOrFail($id);
+        $reservation->validation_admin = 'refuse';
+        $reservation->save();
+    
+        return response()->json(['message' => 'Paiement refusé par l\'admin']);
+    }
+    
     
 }

@@ -10,7 +10,7 @@ class Ville extends Model
 
     public function periodes()
     {
-        return $this->hasMany(Periode::class, 'nom_ville');
+        return $this->hasMany(Periode::class, 'nom_ville', 'nom_ville');
     }
 
     public function residences()
@@ -22,5 +22,7 @@ class Ville extends Model
     {
         return $this->hasMany(Appartement::class, 'nom_ville');
     }
+    
+
 }
 

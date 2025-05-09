@@ -11,7 +11,7 @@
       <div class="logo">ORMVAH</div>
     </div>
   </header>
-<body>
+
   <section class="form-container">
     <h2>S'inscrire</h2>
     <form id="registerForm">
@@ -33,14 +33,35 @@
   <script>
     document.getElementById("registerForm").addEventListener("submit", function(e) {
       e.preventDefault();
-      const name = document.getElementById("name").value;
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
 
-      fetch("http://localhost:8000/api/agent/register", {
+      const data = {
+        nom: document.getElementById("nom").value,
+        prenom: document.getElementById("prenom").value,
+        cin: document.getElementById("cin").value,
+        matricule: document.getElementById("matricule").value,
+        fonction: document.getElementById("fonction").value,
+        grade: document.getElementById("grade").value,
+        service: document.getElementById("service").value,
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value,
+        password_confirmation: document.getElementById("password_confirmation").value
+      };
+
+      fetch("http://localhost:8000/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password })
+        body: JSON.stringify({
+          nom,
+          prenom,
+          cin,
+          matricule,
+          fonction,
+          grade,
+          service,
+          email,
+          password,
+          password_confirmation: password
+        })
       })
       .then(res => res.json())
       .then(data => {
@@ -48,10 +69,13 @@
           localStorage.setItem("token", data.token);
           window.location.href = "index.html";
         } else {
-          alert("Inscription échouée");
+          alert(data.message || "Inscription échouée");
         }
       })
-      .catch(err => console.error(err));
+      .catch(err => {
+        console.error(err);
+        alert("Erreur serveur");
+      });
     });
   </script>
 </body>

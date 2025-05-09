@@ -22,45 +22,32 @@
     <form id="searchForm">
       <div class="search-fields">
         <input type="text" id="ville" placeholder="Où allez-vous ?" list="villes" required />
-        <input type="date" id="date" required />
-        <input type="number" id="voyageurs" placeholder="Voyageurs" min="1" required />
+        <input type="date" id="periode" />
         <button type="submit">Rechercher</button>
       </div>
     </form>
     <datalist id="villes">
       <option value="Rabat">
-      <option value="Kenitra">
       <option value="Agadir">
-      <option value="Meknes">
       <option value="Fès">
       <option value="Ifrane">
-      <option value="Tétouan">
-      <option value="Chefchaouen">
-      <option value="Azrou">
-      <option value="Taghazout">
       <option value="Marrakech">
       <option value="El Jadida">
-      <option value="Oualidia">
-      <option value="Ouarzazate">
-      <option value="Assilah">
-      <option value="Tanger">
       <option value="Casablanca">
-      <option value="Khénifra">
-      <option value="Safi">
-      <option value="Essaouira">
-      <option value="Merzouga">
-      <option value="Zagoura">
     </datalist>
   </div>
+
+  <p id="periode"></p>
 
   <div id="appartements" class="apartments-grid"></div>
 
   <div class="modal-overlay" id="modal">
     <div class="modal">
       <span class="close" onclick="fermerModal()">&times;</span>
-      <h2 id="modal-title">Détails</h2>
-      <div id="modal-description"></div>
+      <h2 id="modal-title">Détails de l'Appartement</h2>
       <div id="modal-images" class="gallery"></div>
+      <div id="modal-description"></div>
+      <div id="modal-residence"></div>
     </div>
   </div>
   <div id="preReservationContainer" style="display: none;">
@@ -86,15 +73,15 @@
       <input type="text" name="status" value="en attente" readonly><br>
       <button type="submit">Envoyer la pré-réservation</button>
     </form>
-    
-    <div id="message"></div>    
-    <div id="reservationSection" style="display: none;">
-      <h3>Déposer un reçu de paiement</h3>
-      <form id="uploadRecuForm">
-        <input type="file" name="recu_paiement" required>
-        <button type="submit">Envoyer le reçu</button>
-      </form>
-    </div>
+
+    <h2>Étape suivante : Paiement</h2>
+    <p>Vous devez aller à la banque et déposer le reçu dans les 24 heures.</p>
+    <form id="uploadRecuForm" enctype="multipart/form-data">
+      <label for="recu_paiement">Reçu de paiement (PDF ou image) :</label>
+      <input type="file" name="recu_paiement" id="recu_paiement" accept=".pdf,.jpg,.jpeg,.png" required />
+      <button type="submit">Uploader le reçu</button>
+    </form>  
+
   </div>
 
   <script src="script.js" defer></script>
