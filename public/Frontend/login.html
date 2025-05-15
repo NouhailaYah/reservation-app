@@ -32,31 +32,36 @@
       const password = document.getElementById("password").value;
       const loginError = document.getElementById("login-error");
 
-
-      fetch("http://localhost:8000/api/agent/login", {
+      try {
+        const response = await fetch("http://localhost:8000/api/agent/login", {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json"
           },
           body: JSON.stringify({
             login: email,
             password: password
           })
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
+        });
+
+        const data = await response.json();
+        console.log("Réponse reçue :", data);
+
+        if (response.ok && data.token) {
+          console.log("Connexion réussie");
           localStorage.setItem("agent_token", data.token);
           localStorage.setItem("agent_nom", data.nom);
-          // Rediriger vers la page d'accueil directement
-          window.location.href = 'index.html';
+          window.location.href = "index.html";
         } else {
-          loginError.innerText = data.message  || "Erreur de connexion.";
+          console.log("Connexion échouée :", data.message);
+          loginError.innerText = data.message || "Erreur de connexion.";
         }
-      })
-      .catch(err => {
-          loginError.innerText = "Erreur de connexion. Veuillez réessayer.";
-      });
+      }
+      catch (err) {
+        console.error("Erreur de requête :", err);
+        loginError.innerText = "Erreur de connexion. Veuillez réessayer.";
+      }
+
     });
   </script>
   
