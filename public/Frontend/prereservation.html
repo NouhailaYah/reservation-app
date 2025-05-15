@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire de Pré-réservation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Pré-réservation</h1>
+    <div id="reservation-details">
+        <form id="pre-reservation-form">
+            <div>
+                <label for="cin"><strong>CIN :</strong></label>
+                <input type="text" id="cin" required>
+            </div>
+            <div>
+                <label for="nom"><strong>Nom :</strong></label>
+                <input type="text" id="nom" required>
+            </div>
+            <div>
+                <label for="prenom"><strong>Prénom :</strong></label>
+                <input type="text" id="prenom" required>
+            </div>
+            <div>
+                <label><strong>Appartement :</strong></label>
+                <p id="appartement-details">N/A</p>
+            </div>
+            <div>
+                <label><strong>Résidence :</strong></label>
+                <p id="residence-details">N/A</p>
+            </div>
+            <div>
+                <label><strong>Ville :</strong></label>
+                <p id="ville-details">N/A</p>
+            </div>
+            <div>
+                <label><strong>Date de début :</strong></label>
+                <p id="date_debut_details">N/A</p>
+            </div>
+            <div>
+                <label><strong>Date de fin :</strong></label>
+                <p id="date_fin_details">N/A</p>
+            </div>
+            <div>
+                <label><strong>Status :</strong></label>
+                <p id="status-details">En attente</p>
+            </div>
+
+            <button type="submit" id="confirm-reservation-btn">Confirmer la pré-réservation</button>
+        </form>
+    </div>
+
+    <script src="prereservation.js"></script>
+</body>
+</html>
+

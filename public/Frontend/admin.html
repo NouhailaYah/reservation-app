@@ -14,68 +14,19 @@
 
   <nav>
     <button onclick="showSection('appartements')">Appartements</button>
+    <button onclick="showSection('residences')">Résidences</button>
     <button onclick="showSection('agents')">Agents</button>
     <button onclick="showSection('reservations')">Pré-réservations</button>
+    <button onclick="showSection('paiements')">Paiements</button>
   </nav>
 
   <main>
-    <!-- Section Appartements -->
-    <section id="appartements" class="admin-section">
-      <h2>Gestion des appartements</h2>
-      <div id="appartements-list"></div>
-      <button onclick="showAddAppartementForm()">Ajouter un appartement</button>
-      <div id="add-appartement-form" style="display: none;">
-        <!-- Formulaire d’ajout/modification -->
-      </div>
-    </section>
-
-    <!-- Section Agents -->
-    <section id="agents" class="admin-section" style="display: none;">
-      <h2>Liste des agents</h2>
-      <div id="agents-list"></div>
-    </section>
-
-    <section>
-        <div id="residences-section">
-            <h2>Gestion des résidences</h2>
-            <button onclick="showAddResidenceForm()">Ajouter une résidence</button>
-            <div id="residences-list"></div>
-        </div>
-        
-    </section>
-
-    <!-- Section Pré-réservations -->
-    <section id="reservations" class="admin-section" style="display: none;">
-      <h2>Pré-réservations</h2>
-      <div id="reservations-list"></div>
-    </section>
+    <section id="appartements" class="admin-section"></section>
+    <section id="residences" class="admin-section" style="display: none;"></section>
+    <section id="agents" class="admin-section" style="display: none;"></section>
+    <section id="reservations" class="admin-section" style="display: none;"></section>
+    <section id="paiements" class="admin-section" style="display: none;"></section>
   </main>
-
-  <h2>Gestion des Périodes</h2>
-  <form id="periodeForm">
-    <label for="nom_ville">Ville :</label>
-    <select id="nom_ville_periode">
-      <option value="Rabat">Rabat</option>
-      <option value="Fès">Fès</option>
-      <option value="Marrakech">Marrakech</option>
-      <option value="Casablanca">Casablanca</option>
-      <option value="Agadir">Agadir</option>
-      <option value="El Jadida">El Jadida</option>
-      <option value="Ifrane">Ifrane</option>
-    </select>
-  
-    <label for="date_debut">Date de début :</label>
-    <input type="date" id="date_debut" required>
-    
-    <label for="date_fin">Date de fin :</label>
-    <input type="date" id="date_fin" required>
-    
-    <button type="submit">Ajouter Période</button>
-  </form>
-  
-  <h3>Périodes existantes</h3>
-  <div id="listePeriodes"></div>
-  
 
   <script src="admin.js"></script>
 </body>

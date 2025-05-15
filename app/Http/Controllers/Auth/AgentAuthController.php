@@ -16,7 +16,8 @@ class AgentAuthController extends Controller
     // Inscription de l'agent
     public function register(Request $request)
     {
-        $request->validate([
+        // Validation des données
+        $validatedData = $request->validate([
             'nom' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
             'cin' => 'required|string|max:20|unique:agents',
@@ -24,20 +25,20 @@ class AgentAuthController extends Controller
             'fonction' => 'required|string|max:255',
             'grade' => 'required|string|max:255',
             'service' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:agents',
+            'login' => 'required|string|email|max:255|unique:agents',
             'password' => 'required|string|min:6|confirmed',
         ]);
-
+        // Création de l'agent
         $agent = Agent::create([
-            'nom' => $request->nom,
-            'prenom' => $request->prenom,
-            'cin' => $request->cin,
-            'matricule' => $request->matricule,
-            'fonction' => $request->fonction,
-            'grade' => $request->grade,
-            'service' => $request->service,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'nom' => $validatedData['nom'],
+            'prenom' => $validatedData['prenom'],
+            'cin' => $validatedData['cin'],
+            'matricule' => $validatedData['matricule'],
+            'fonction' => $validatedData['fonction'],
+            'grade' => $validatedData['grade'],
+            'service' => $validatedData['service'],
+            'login' => $validatedData['login'],
+            'password' => Hash::make($validatedData['password']),
         ]);
 
         $token = $agent->createToken('agent_token')->plainTextToken;
@@ -52,24 +53,36 @@ class AgentAuthController extends Controller
     // Connexion de l'agent
     public function login(Request $req)
     {
+        $validator = Validator::make($req->all(), [ 
+            'login'     => 'required|string',
+            'password'  => 'required|string'
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
 
-        // return response()->json([
-        //     'message' => 'Connexion réussie',
-        //     'token' => 'token',
-        //     'admin' => 'admin',
-        // ], 200);
+        $agent = Agent::where('login', $req->login)->first();
 
+        if (!$agent) {
+            return response()->json(['error' => 'Aucun compte trouve avec ce login. Voulez-vous creer un compte ?'], 404);
+        }
+        if (!Hash::check($req->password, $agent->password)) {
+            return response()->json(['error' => 'Mot de passe incorrect'], 401);
+        }
+        
+        // Création du token
+        $token = $agent->createToken('AgentToken')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Connexion réussie',
+            'token' => $token, 
+            'nom' => $agent->nom
+        ], 200);
+    }
         // $request->validate([
-        //     'email' => 'required|email',
+        //     'login' => 'required|email',
         //     'password' => 'required',
         // ]);
-
-
-        // return response()->json([
-        //     'message' => 'Connexion réussie',
-        //     'token' => 'token',
-        //     'admin' => 'admin',
-        // ], 200);
 
         // $agent = Agent::where('email', $request->email)->first();
 
@@ -93,35 +106,11 @@ class AgentAuthController extends Controller
         //     'message' => 'Connexion réussie. Un email de notification a été envoyé.'
         // ]);
 
-        $validator = Validator::make($req->all(), [
-            'email'     => 'required|string',
-            'password'  => 'required|string'
-          ]);
-
-        if ($validator->fails()) {
-        return response()->json($validator->errors());
-        // return response()->json(["aaa" =>"aaajjj"]);
-        }
-        $user = Agent::where('email', $req->email)->first();
-        if (!$user || !Hash::check($req->password, $user->password)) {
-            return response()->json(['error' => 'Email or password is not matched'], 401);
-        }
-        
-        $token = $user->createToken('AuthToken')->plainTextToken;
-        $cookie = cookie('token', $token, 60);
-
-        return response()->json(['token' => $token, "user" => $user], 200)->cookie( $cookie);
-        
-
-
-
-
-    }
 
     // Déconnexion
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        $request->agent()->currentAccessToken()->delete();
         return response()->json(['message' => 'Déconnexion réussie']);
     }
 }

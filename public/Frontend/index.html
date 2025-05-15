@@ -10,14 +10,16 @@
   <header>
     <div class="nav">
       <div class="logo">ORMVAH</div>
+      <div id="user-welcome" style="font-weight: bold; margin-right: 15px;"></div>
       <div class="auth-links" id="auth-links">
-        <a href="login.html">Se connecter</a>
-        <a href="register.html">S'inscrire</a>
+        <a href="login.html" id="loginLink">Se connecter</a>
+        <a href="register.html" id="registerLink">S'inscrire</a>
+        <a href="#" id="logoutLink" style="display: none;">Déconnexion</a>
       </div>
-      <button id="logout-btn" style="display: none;">Déconnexion</button>
     </div>
   </header>
-
+  
+  <h2>Bienvenue sur la page d'accueil </h2>
   <div class="search-box">
     <form id="searchForm">
       <div class="search-fields">
@@ -49,39 +51,6 @@
       <div id="modal-description"></div>
       <div id="modal-residence"></div>
     </div>
-  </div>
-  <div id="preReservationContainer" style="display: none;">
-    <h2>Formulaire de pré-réservation</h2>
-    <form id="preReservationForm">
-      <label>CIN :</label>
-      <input type="text" name="CIN" required><br>
-      <label>Nom :</label>
-      <input type="text" name="nom" required><br>
-      <label>Prénom :</label>
-      <input type="text" name="prenom" required><br>
-      <label>ID Appartement :</label>
-      <input type="number" name="id_appart" id="id_appart" readonly><br>
-      <label>ID Résidence :</label>
-      <input type="number" name="id_resid" required><br>
-      <label>Ville :</label>
-      <input type="text" name="nom_ville" required><br>
-      <label>Date de début :</label>
-      <input type="date" name="date_debut" id="date_debut" readonly><br>
-      <label>Date de fin :</label>
-      <input type="date" name="date_fin" id="date_fin" readonly><br>
-      <label>Status :</label>
-      <input type="text" name="status" value="en attente" readonly><br>
-      <button type="submit">Envoyer la pré-réservation</button>
-    </form>
-
-    <h2>Étape suivante : Paiement</h2>
-    <p>Vous devez aller à la banque et déposer le reçu dans les 24 heures.</p>
-    <form id="uploadRecuForm" enctype="multipart/form-data">
-      <label for="recu_paiement">Reçu de paiement (PDF ou image) :</label>
-      <input type="file" name="recu_paiement" id="recu_paiement" accept=".pdf,.jpg,.jpeg,.png" required />
-      <button type="submit">Uploader le reçu</button>
-    </form>  
-
   </div>
 
   <script src="script.js" defer></script>

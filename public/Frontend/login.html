@@ -12,10 +12,12 @@
     </div>
   </header>
 
+  <div id="login-error" style="color: red; text-align: center;"></div>
+
   <section class="form-container">
     <h2>Se connecter</h2>
-    <form id="loginForm">
-      <input type="email" id="email" placeholder="Email" required />
+    <form id="loginForm" method="post">
+      <input type="email" id="login" placeholder="Login" required />
       <input type="password" id="password" placeholder="Mot de passe" required />
       <button type="submit">Connexion</button>
       <p class="message">Pas encore inscrit ? <a href="register.html">Créer un compte</a></p>
@@ -23,39 +25,40 @@
   </section>
 
   <script>
-        document.getElementById("loginForm").addEventListener("submit", async function (e) {
-    e.preventDefault();
+  document.getElementById("loginForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+  
+      const email = document.getElementById("login").value;
+      const password = document.getElementById("password").value;
+      const loginError = document.getElementById("login-error");
 
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
 
-    try {
-        const response = await fetch("http://localhost:8000/api/agent/login", {
-            method: "POST",  
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email, password }),
-        });
-        
-        // const data = await response.json();
-        const data = "";
-        console.log(response); 
-        console.log(data);
-
-        if (response.ok) {
-            alert("Connexion réussie !");
-            window.location.href = "index.html";
+      fetch("http://localhost:8000/api/agent/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            login: email,
+            password: password
+          })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          localStorage.setItem("agent_token", data.token);
+          localStorage.setItem("agent_nom", data.nom);
+          // Rediriger vers la page d'accueil directement
+          window.location.href = 'index.html';
         } else {
-            alert(data.message || "Erreur de connexion");
+          loginError.innerText = data.message  || "Erreur de connexion.";
         }
-    } catch (error) {
-        console.error("Erreur serveur :", error);
-        alert("Erreur serveur. Consultez la console pour plus d'informations.");
-    }
-});
-
-
+      })
+      .catch(err => {
+          loginError.innerText = "Erreur de connexion. Veuillez réessayer.";
+      });
+    });
   </script>
+  
 </body>
 </html>

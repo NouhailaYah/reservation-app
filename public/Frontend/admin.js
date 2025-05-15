@@ -3,29 +3,29 @@ const token = localStorage.getItem('admin_token');
 
 function logout() {
     localStorage.removeItem('admin_token');
-    window.location.href = 'login.html';
+    window.location.href = 'login_admin.html';
 }
-
-document.getElementById('logout-button').addEventListener('click', logout);
 
 // Navigation entre les sections
 function showSection(sectionId) {
-    document.querySelectorAll('.section').forEach(section => {
+    document.querySelectorAll('.admin-section').forEach(section => {
         section.style.display = 'none';
     });
     document.getElementById(sectionId).style.display = 'block';
 }
 
-document.getElementById('appartements-btn').addEventListener('click', () => showSection('appartements-section'));
-document.getElementById('agents-btn').addEventListener('click', () => showSection('agents-section'));
-document.getElementById('pre-reservations-btn').addEventListener('click', () => showSection('pre-reservations-section'));
+document.addEventListener('DOMContentLoaded', () => {
+    fetchAppartements();
+    fetchResidences();
+    fetchAgents();
+    fetchPreReservations();
+    fetchPaiements();
+    chargerPeriodes();
+});
 
-//GESTION DES APPARTEMENTS
+// GESTION DES APPARTEMENTS
 async function fetchAppartements() {
-    const response = await fetch(`${API_BASE_URL}/appartements`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-    });
-
+    const response = await fetch(`${API_BASE_URL}/appartements`, { headers: { 'Authorization': `Bearer ${token}` }});
     const appartements = await response.json();
     const container = document.getElementById('appartements-list');
     container.innerHTML = '';
@@ -37,8 +37,6 @@ async function fetchAppartements() {
             <h3>${app.nom || 'Appartement'}</h3>
             <p>${app.superficie ? app.superficie + ' m²' : 'Superficie non définie'}</p>
             <p>${app.nbr_chambre ? app.nbr_chambre + ' chambre(s)' : 'Nombre de chambres non défini'}</p>
-            <p>${app.etages ? 'Étage ' + app.etages : 'Étage non défini'}</p>
-            <p>${app.prix ? app.prix + ' DH / nuit' : 'Prix non défini'}</p>
             <button onclick="editAppartement(${app.id})">Modifier</button>
             <button onclick="deleteAppartement(${app.id})">Supprimer</button>
         `;
@@ -46,66 +44,75 @@ async function fetchAppartements() {
     });
 }
 
-// Supprimer un appartement
-async function deleteAppartement(id) {
-    if (!confirm('Supprimer cet appartement ?')) return;
+// GESTION DES PAIEMENTS
+async function fetchPaiements() {
+    const response = await fetch(`${API_BASE_URL}/paiements`, { headers: { 'Authorization': `Bearer ${token}` }});
+    const paiements = await response.json();
+    const container = document.getElementById('paiements-list');
+    container.innerHTML = '';
 
-    await fetch(`${API_BASE_URL}/appartements/${id}`, {
-        method: 'DELETE',
+    paiements.forEach(payment => {
+        const div = document.createElement('div');
+        div.innerHTML = `
+            <p>Agent: ${payment.agent.nom} ${payment.agent.prenom}</p>
+            <p>Montant: ${payment.montant} DH</p>
+            <a href="${payment.recu_url}" target="_blank">Voir le reçu</a>
+            <button onclick="validerPaiement(${payment.id})">Valider</button>
+            <button onclick="refuserPaiement(${payment.id})">Refuser</button>
+        `;
+        container.appendChild(div);
+    });
+}
+
+// Valider ou Refuser Paiement
+async function validerPaiement(id) {
+    await fetch(`${API_BASE_URL}/paiements/${id}/valider`, {
+        method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` }
     });
-
-    fetchAppartements();
+    fetchPaiements();
 }
 
-// Ajouter une résidence
-async function addResidence(data) {
-    await fetch(`${API_BASE_URL}/residences`, {
+async function refuserPaiement(id) {
+    await fetch(`${API_BASE_URL}/paiements/${id}/refuser`, {
         method: 'POST',
-        headers: {'Content-Type': 'application/json','Authorization': `Bearer ${token}`},
-        body: JSON.stringify(data)
+        headers: { 'Authorization': `Bearer ${token}` }
     });
-    fetchResidences();
+    fetchPaiements();
 }
 
-// Charger les périodes
-async function chargerPeriodes() {
-    const response = await fetch(`${API_BASE_URL}/periodes`, {headers: {'Authorization': `Bearer ${token}`}});
-    const periodes = await response.json();
-    const listePeriodes = document.getElementById('listePeriodes');
-    listePeriodes.innerHTML = '';
+// GESTION DES PRE-RESERVATIONS
+async function fetchPreReservations() {
+    const response = await fetch(`${API_BASE_URL}/pre-reservations`, { headers: { 'Authorization': `Bearer ${token}` }});
+    const reservations = await response.json();
+    const container = document.getElementById('reservations-list');
+    container.innerHTML = '';
 
-    periodes.forEach(periode => {
+    reservations.forEach(res => {
         const div = document.createElement('div');
-        div.innerHTML = `<p>${periode.nom_ville} : Du ${periode.date_debut} au ${periode.date_fin}</p>`;
-        listePeriodes.appendChild(div);
+        div.innerHTML = `
+            <p>Agent: ${res.agent.nom} ${res.agent.prenom}</p>
+            <p>Appartement: ${res.appartement.nom}</p>
+            <button onclick="accepterPreReservation(${res.id})">Accepter</button>
+            <button onclick="refuserPreReservation(${res.id})">Refuser</button>
+        `;
+        container.appendChild(div);
     });
 }
 
-// Ajouter une période
-async function addPeriode(ville, dateDebut, dateFin) {
-    await fetch(`${API_BASE_URL}/periodes`, {
+// Accepter ou Refuser Pré-réservation
+async function accepterPreReservation(id) {
+    await fetch(`${API_BASE_URL}/pre-reservations/${id}/accepter`, {
         method: 'POST',
-        headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`},
-        body: JSON.stringify({nom_ville: ville, date_debut: dateDebut, date_fin: dateFin})
+        headers: { 'Authorization': `Bearer ${token}` }
     });
-    chargerPeriodes();
+    fetchPreReservations();
 }
 
-// Soumission formulaire période
-document.getElementById('periodeForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const ville = document.getElementById('nom_ville_periode').value;
-    const dateDebut = document.getElementById('date_debut').value;
-    const dateFin = document.getElementById('date_fin').value;
-    addPeriode(ville, dateDebut, dateFin);
-});
-
-// Initialiser
-document.addEventListener('DOMContentLoaded', () => {
-    fetchAppartements();
-    chargerPeriodes();
-});  
-
-
-
+async function refuserPreReservation(id) {
+    await fetch(`${API_BASE_URL}/pre-reservations/${id}/refuser`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+    fetchPreReservations();
+}

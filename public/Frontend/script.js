@@ -1,7 +1,6 @@
 function fermerModal() {
   document.getElementById("modal").style.display = "none";
 }
-
 function handleModalClick(event) {
   if (event.target.classList.contains('modal-overlay')) {
     fermerModal();
@@ -9,18 +8,30 @@ function handleModalClick(event) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("agent_token");
+  const userName = localStorage.getItem("agent_nom");
+  const userWelcomeDiv = document.getElementById("user-welcome");
   const authLinks = document.getElementById("auth-links");
-  const logoutBtn = document.getElementById("logout-btn");
-
-  if (token) {
-    authLinks.style.display = "none";
-    logoutBtn.style.display = "inline-block";
+  const loginLink = document.getElementById("loginLink");
+  const registerLink = document.getElementById("registerLink");
+  const logoutLink = document.getElementById("logoutLink");
+  
+  if (token && userName) {
+    userWelcomeDiv.textContent = `Bienvenue, ${userName}.`;
+    loginLink.style.display = "none";
+    registerLink.style.display = "none";
+    logoutLink.style.display = "inline";
+  } else {
+    userWelcomeDiv.textContent = "";
+    loginLink.style.display = "inline";
+    registerLink.style.display = "inline";
+    logoutLink.style.display = "none";
   }
 
-  logoutBtn.addEventListener("click", () => {
-    localStorage.removeItem("token");
-    location.reload();
+  logoutLink.addEventListener("click", function() {
+    localStorage.removeItem("agent_token");
+    localStorage.removeItem("agent_nom");
+    window.location.href = "index.html";
   });
 });
 
@@ -198,19 +209,18 @@ function fermerDetails() {
   document.getElementById('modal').style.display = 'none';
 }
 
-function reserver(idAppart) {
-  fetch(`http://localhost:8000/api/appartements/${idAppart}`)
-    .then(res => res.json())
-    .then(data => {
-      document.getElementById("id_appart").value = data.id_appart;
-      document.getElementById("id_resid").value = data.id_resid;
-      document.getElementById("nom_ville").value = data.nom_ville;
+function reserver(appartementJson) {
+  const token = localStorage.getItem("agent_token");
+  if (!token) {
+    alert("Vous devez être connecté pour réserver.");
+    window.location.href = "login.html";
+    return;
+  }
 
-      document.getElementById("modal").style.display = "none";
-      document.getElementById("preReservationForm").style.display = "block";
-    })
-    .catch(err => alert("Erreur lors du chargement de l'appartement."));
+  localStorage.setItem("selected_appartement", appartementJson);
+  window.location.href ="prereservation.html";
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
   const searchForm = document.getElementById("searchForm");
@@ -226,50 +236,49 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Formulaire de pré-réservation
-document.getElementById('preReservationForm').addEventListener('submit', function (e) {
-  e.preventDefault();
-  const formData = new FormData(this);
-  const data = Object.fromEntries(formData.entries());
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("preReservationForm");
+  if (form) {
+    const selectedAppartement = JSON.parse(localStorage.getItem("selected_appartement"));
+    if (selectedAppartement) {
+      document.getElementById("id_appart").value = selectedAppartement.id_appart;
+      document.getElementById("id_resid").value = selectedAppartement.id_resid;
+      document.getElementById("nom_ville").value = selectedAppartement.nom_ville;
+    }
 
-  fetch('http://localhost:8000/api/pre-reservations', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data)
-  })
-    .then(res => res.json())
-    .then(res => {
-      alert(res.message || 'Pré-réservation effectuée');
-      localStorage.setItem('preReservationId', res.pre_reservation.id_pre_reser);
-    })
-    .catch(err => alert('Erreur : ' + err));
-});
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
 
+      const formData = {
+        cin: document.getElementById("cin").value,
+        nom: document.getElementById("nom").value,
+        prenom: document.getElementById("prenom").value,
+        id_appart: document.getElementById("id_appart").value,
+        id_resid: document.getElementById("id_resid").value,
+        nom_ville: document.getElementById("nom_ville").value,
+        date_debut: document.getElementById("date_debut").value,
+        date_fin: document.getElementById("date_fin").value,
+        status: "En attente"
+      };
 
-// Envoi du reçu
-document.getElementById('uploadRecuForm').addEventListener('submit', function (e) {
-  e.preventDefault();
-
-  const reservationId = localStorage.getItem('reservationId');
-  if (!reservationId) {
-    alert("Aucune réservation trouvée. Veuillez refaire le processus.");
-    return;
-  }
-
-  const formData = new FormData();
-  formData.append('recu_paiement', document.getElementById('recu_paiement').files[0]);
-
-  fetch(`http://localhost:8000/api/reservations/${reservationId}/upload-recu`, {
-    method: 'POST',
-    body: formData,
-  })
-    .then(res => res.json())
-    .then(res => {
-      alert(res.message || 'Reçu envoyé avec succès.');
-    })
-    .catch(err => {
-      alert("Erreur lors de l'envoi du reçu : " + err.message);
+      const token = localStorage.getItem("agent_token");
+      fetch('http://localhost:8000/api/pre-reservations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(formData)
+      })
+        .then(res => res.json())
+        .then(res => {
+          alert(res.message || 'Pré-réservation effectuée avec succès');
+          localStorage.setItem('preReservationId', res.pre_reservation.id_pre_reser);
+          window.location.href = "index.html";
+        })
+        .catch(err => alert('Erreur : ' + err.message));
     });
+  }
 });
+
 
