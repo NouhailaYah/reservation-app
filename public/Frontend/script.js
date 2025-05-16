@@ -250,7 +250,7 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
 
       const formData = {
-        cin: document.getElementById("cin").value,
+        CIN: document.getElementById("CIN").value,
         nom: document.getElementById("nom").value,
         prenom: document.getElementById("prenom").value,
         id_appart: document.getElementById("id_appart").value,

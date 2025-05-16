@@ -1,17 +1,15 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // Récupérer les détails de l'appartement, de la résidence et de la ville
+    // détails de l'appart, résidence, ville ...
     fetchReservationDetails();
 
-    // Gestion de la soumission du formulaire
     document.getElementById("pre-reservation-form").addEventListener("submit", function(event) {
         event.preventDefault();
         submitPreReservation();
     });
 });
 
-// Fonction pour récupérer les détails de la pré-réservation (ville, appartement, etc.)
+// Fonction pour récupérer les détails de pré-réservation (ville, appartement, etc.)
 function fetchReservationDetails() {
-    // Remplacez cette URL par votre API de récupération des détails
     fetch("http://localhost:8000/api/pre-reservation/details")
         .then(response => response.json())
         .then(data => {
@@ -20,6 +18,14 @@ function fetchReservationDetails() {
             document.getElementById("ville-details").textContent = data.nom_ville;
             document.getElementById("date_debut_details").textContent = data.date_debut;
             document.getElementById("date_fin_details").textContent = data.date_fin;
+
+             // Calculer le prix total automatiquement
+            const dateDebut = new Date(data.date_debut);
+            const dateFin = new Date(data.date_fin);
+            const prixParNuit = data.prix;
+            const nombreJours = Math.max(1, (dateFin - dateDebut) / (1000 * 60 * 60 * 24));// une journée complète en millisecondes.
+            const prixTotal = prixParNuit * nombreJours;
+            document.getElementById("prix-details").textContent = prixTotal + " MAD";
         })
         .catch(error => {
             console.error("Erreur lors de la récupération des détails :", error);
@@ -28,7 +34,7 @@ function fetchReservationDetails() {
 
 // Fonction pour soumettre la pré-réservation
 function submitPreReservation() {
-    const cin = document.getElementById("cin").value;
+    const CIN = document.getElementById("CIN").value;
     const nom = document.getElementById("nom").value;
     const prenom = document.getElementById("prenom").value;
     const id_appart = document.getElementById("appartement-details").textContent;
@@ -36,21 +42,18 @@ function submitPreReservation() {
     const nom_ville = document.getElementById("ville-details").textContent;
     const date_debut = document.getElementById("date_debut_details").textContent;
     const date_fin = document.getElementById("date_fin_details").textContent;
-    const status = "En attente";
 
     const reservationData = {
-        cin,
+        CIN,
         nom,
         prenom,
         id_appart,
         id_resid,
         nom_ville,
         date_debut,
-        date_fin,
-        status
+        date_fin
     };
 
-    // Envoi de la pré-réservation à l'API Laravel
     fetch("http://localhost:8000/api/pre-reservation", {
         method: "POST",
         headers: {
@@ -61,9 +64,9 @@ function submitPreReservation() {
     })
     .then(response => response.json())
     .then(data => {
-        if (data.success) {
-            alert("Pré-réservation enregistrée avec succès.");
-            window.location.href = "index.html"; // Rediriger si nécessaire
+        if (data.pre_reservation) {
+            document.getElementById("confirmation-message").style.display = "block";
+            document.getElementById("confirmation-message").textContent = "Pré-réservation envoyée avec succès. En attente de validation.";
         } else {
             alert("Erreur lors de la pré-réservation : " + (data.message || "Veuillez réessayer."));
         }

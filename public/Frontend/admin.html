@@ -9,6 +9,7 @@
 <body>
   <header class="admin-header">
     <h1>Interface Admin - ORMVAH</h1>
+
     <button onclick="logout()">Déconnexion</button>
   </header>
 
@@ -16,6 +17,7 @@
     <button onclick="showSection('appartements')">Appartements</button>
     <button onclick="showSection('residences')">Résidences</button>
     <button onclick="showSection('agents')">Agents</button>
+    <button onclick="showSection('periodes')">Periodes</button>
     <button onclick="showSection('reservations')">Pré-réservations</button>
     <button onclick="showSection('paiements')">Paiements</button>
   </nav>
@@ -24,6 +26,7 @@
     <section id="appartements" class="admin-section"></section>
     <section id="residences" class="admin-section" style="display: none;"></section>
     <section id="agents" class="admin-section" style="display: none;"></section>
+    <section id="periode" class="admin-section" style="display: none;"></section>
     <section id="reservations" class="admin-section" style="display: none;"></section>
     <section id="paiements" class="admin-section" style="display: none;"></section>
   </main>

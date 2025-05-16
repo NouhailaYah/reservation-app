@@ -17,10 +17,10 @@ class AgentAuthController extends Controller
     public function register(Request $request)
     {
         // Validation des données
-        $validatedData = $request->validate([
+        $validator = Validator::make($request->all(), [
             'nom' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
-            'cin' => 'required|string|max:20|unique:agents',
+            'CIN' => 'required|string|max:20|unique:agents',
             'matricule' => 'required|string|max:20|unique:agents',
             'fonction' => 'required|string|max:255',
             'grade' => 'required|string|max:255',
@@ -28,26 +28,24 @@ class AgentAuthController extends Controller
             'login' => 'required|string|email|max:255|unique:agents',
             'password' => 'required|string|min:6|confirmed',
         ]);
-        // Création de l'agent
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()->first()], 422);
+        }
+
         $agent = Agent::create([
-            'nom' => $validatedData['nom'],
-            'prenom' => $validatedData['prenom'],
-            'cin' => $validatedData['cin'],
-            'matricule' => $validatedData['matricule'],
-            'fonction' => $validatedData['fonction'],
-            'grade' => $validatedData['grade'],
-            'service' => $validatedData['service'],
-            'login' => $validatedData['login'],
-            'password' => Hash::make($validatedData['password']),
+            'nom' => $request->nom,
+            'prenom' => $request->prenom,
+            'CIN' => $request->CIN,
+            'matricule' => $request->matricule,
+            'fonction' => $request->fonction,
+            'grade' => $request->grade,
+            'service' => $request->service,
+            'login' => $request->login,
+            'password' => Hash::make($request->password),
         ]);
 
-        $token = $agent->createToken('agent_token')->plainTextToken;
-
-        return response()->json([
-            'message' => 'Inscription réussie',
-            'token' => $token,
-            'agent' => $agent
-        ], 201);
+        return response()->json(['message' => 'Inscription réussie'], 201);
     }
 
     // Connexion de l'agent
@@ -79,32 +77,6 @@ class AgentAuthController extends Controller
             'nom' => $agent->nom
         ], 200);
     }
-        // $request->validate([
-        //     'login' => 'required|email',
-        //     'password' => 'required',
-        // ]);
-
-        // $agent = Agent::where('email', $request->email)->first();
-
-        // if (!$agent || !Hash::check($request->password, $agent->password)) {
-        //     return response()->json(['message' => 'Identifiants invalides'], 401);
-        // }
-
-        // $token = $agent->createToken('agent_token')->plainTextToken;
-
-        // Mail::raw(
-        //     "Bonjour {$agent->nom} {$agent->prenom}, vous vous êtes connecté avec succès.",
-        //     function ($message) use ($agent) {
-        //         $message->to($agent->email)
-        //                 ->subject('Notification de Connexion - ORMVAH');
-        //     }
-        // );
-
-        // return response()->json([
-        //     'token' => $token,
-        //     'agent' => $agent,
-        //     'message' => 'Connexion réussie. Un email de notification a été envoyé.'
-        // ]);
 
 
     // Déconnexion

@@ -8,7 +8,7 @@ class PreReservation extends Model
 {
     protected $primaryKey = 'id_pre_reser';
 
-    protected $fillable = ['CIN', 'nom', 'prenom', 'id_appart', 'id_resid', 'nom_ville', 'date_debut', 'date_fin', 'status'];
+    protected $fillable = ['CIN', 'nom', 'prenom', 'id_appart', 'id_resid', 'nom_ville', 'prix', 'date_debut', 'date_fin', 'status'];
 
     public function appartement()
     {

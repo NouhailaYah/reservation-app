@@ -61,3 +61,5 @@ Route::post('/pre-reservation', [PreReservationController::class, 'store']);
 Route::get('/villes/{nom_ville}/periode-et-appartements', [VilleController::class, 'periodeEtAppartements']);
 
 Route::get('/pre-reservation/details', [PreReservationController::class, 'details']);
+Route::get('/periodes/ville/{nom_ville}', [PeriodeController::class, 'getByNomVille']);
+

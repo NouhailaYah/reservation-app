@@ -21,10 +21,10 @@ return new class extends Migration
             $table->foreignId('id_appart')->constrained('appartements', 'id_appart')->onDelete('cascade');
             $table->foreignId('id_resid')->constrained('residences', 'id_resid')->onDelete('cascade');
             $table->string('nom_ville');
+            $table->decimal('prix');
             $table->date('date_debut');
             $table->date('date_fin');
-    
-            $table->string('status')->default('en_attente'); // ou confirmé, expiré
+            $table->string('status')->default('en_attente');
     
             $table->timestamps();
         });

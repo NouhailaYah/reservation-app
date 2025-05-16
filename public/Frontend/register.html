@@ -18,7 +18,7 @@
     <form id="registerForm">
       <input type="text" id="nom" placeholder="Nom" required>
       <input type="text" id="prenom" placeholder="Prénom" required>
-      <input type="text" id="cin" placeholder="CIN" required>
+      <input type="text" id="CIN" placeholder="CIN" required>
       <input type="text" id="matricule" placeholder="Matricule" required>
       <input type="text" id="fonction" placeholder="Fonction" required>
       <input type="text" id="grade" placeholder="Grade" required>
@@ -33,47 +33,41 @@
 
   <script>
     document.getElementById("registerForm").addEventListener("submit", async function(e) {
-      e.preventDefault();
+    e.preventDefault();
 
-      const errorDiv = document.getElementById("register-error");
-      errorDiv.innerText = "";
-      const data = {
-        nom: document.getElementById("nom").value,
-        prenom: document.getElementById("prenom").value,
-        cin: document.getElementById("cin").value,
-        matricule: document.getElementById("matricule").value,
-        fonction: document.getElementById("fonction").value,
-        grade: document.getElementById("grade").value,
-        service: document.getElementById("service").value,
-        login: document.getElementById("login").value,
-        password: document.getElementById("password").value,
-        password_confirmation: document.getElementById("password_confirmation").value
-      };
+    const errorDiv = document.getElementById("register-error");
+    const data = {
+        nom: document.getElementById("nom").value.trim(),
+        prenom: document.getElementById("prenom").value.trim(),
+        CIN: document.getElementById("CIN").value.trim(),
+        matricule: document.getElementById("matricule").value.trim(),
+        fonction: document.getElementById("fonction").value.trim(),
+        grade: document.getElementById("grade").value.trim(),
+        service: document.getElementById("service").value.trim(),
+        login: document.getElementById("login").value.trim(),
+        password: document.getElementById("password").value.trim(),
+        password_confirmation: document.getElementById("password_confirmation").value.trim()
+    };
 
-      try {
-        const response = await fetch("http://localhost:8000/api/agent/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data)
-        });
+    try {
+      const response = await fetch("http://localhost:8000/api/agent/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
 
-        const result = await response.json();
-        
-        if (response.ok && result.token) {
-          // Stocker le token et le nom de l'agent
-          localStorage.setItem("agent_token", result.token);
-          localStorage.setItem("agent_nom", data.nom);
-          // Rediriger vers la page de connection
-          window.location.href = "login.html";
-        } else {
-          document.getElementById("register-error").innerText = result.message || "Inscription échouée";
-        }
-      } catch (err) {
-        console.error(err);
-        document.getElementById("register-error").innerText = "Erreur serveur. Veuillez réessayer.";
+      const result = await response.json();
+
+      if (response.ok) {
+        window.location.href = "login.html";
+      } else {
+        errorDiv.innerText = result.message || "Inscription échouée";
       }
-    });
-      
+    } catch (err) {
+        console.error("Erreur de requête :", err);
+        errorDiv.innerText = "Erreur de connexion. Veuillez réessayer.";
+    }
+  });
   </script>
 </body>
 </html>
