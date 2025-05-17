@@ -15,9 +15,8 @@ return new class extends Migration
     {
         Schema::create('periodes', function (Blueprint $table) {
             $table->id();
-            $table->string('nom_ville');
-            //$table->unsignedBigInteger('nom_ville');
-            //$table->foreign('nom_ville')->references('nom_ville')->on('villes')->onDelete('cascade');
+            $table->unsignedBigInteger('nom_ville');
+            $table->foreign('nom_ville')->references('nom_ville')->on('villes')->onDelete('cascade');
             $table->date('date_debut');
             $table->date('date_fin');
             $table->timestamps();

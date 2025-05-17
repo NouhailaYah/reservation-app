@@ -18,7 +18,7 @@
     <button class="tab-btn" data-target="agents">Agents</button>
     <button class="tab-btn" data-target="periodes">Périodes</button>
     <button class="tab-btn" data-target="prereservations">Pré-réservations</button>
-    <button class="tab-btn" data-target="paiements">Paiements</button>
+    <button class="tab-btn" data-target="reservations">Réservations</button>
   </nav>
 
   <main>
@@ -26,13 +26,13 @@
  <section id="residences" class="tab-content active">
     <h2>Gestion des Résidences</h2>
     <div id="residence-form-container">
-      <h3>Ajouter / Modifier une Résidence</h3>
+      <h3>Ajouter une Résidence</h3>
       <form id="residence-form">
         <input type="hidden" id="id_resid" name="id_resid" />
         <label>
         Ville :
         <select id="nom_ville" name="nom_ville" required></select>
-        </label>
+        </label><br>
         <label><input type="checkbox" id="syndic" name="syndic" /> Syndic</label>
         <label><input type="checkbox" id="salle_sport" name="salle_sport" /> Salle de sport</label>
         <label><input type="checkbox" id="piscine" name="piscine" /> Piscine</label>
@@ -58,23 +58,38 @@
       <h2>Gestion des Appartements</h2>
       <form id="appartementForm">
         <input type="hidden" id="appartementId" />
-        <input type="text" id="appartementNom" placeholder="Nom appartement" required />
-        <input type="text" id="appartementResidence" placeholder="Résidence" required />
+        <select id="appartementResidence" required>
+          <option value="">Sélectionner une résidence</option>
+        </select>
+        <select id="appartementVille" required>
+          <option value="">Sélectionner une ville</option>
+        </select>
+
         <input type="number" id="appartementSuperficie" placeholder="Superficie (m²)" required />
-        <input type="number" id="appartementNbChambres" placeholder="Nombre chambres" required />
-        <input type="number" id="appartementNbSdb" placeholder="Nombre salles de bain" required />
-        <button type="submit">Ajouter / Modifier</button>
+        <input type="number" id="appartementEtages" placeholder="Étage" required />
+        <input type="number" id="appartementNbChambres" placeholder="Nombre de chambres" required />
+        <input type="number" id="appartementNbSalles" placeholder="Nombre de salles" required />
+        <input type="number" id="appartementNbSdb" placeholder="Nombre de salles de bain" required />
+        <input type="number" id="appartementPrix" placeholder="Prix par nuit" required />
+        <label><input type="checkbox" id="appartementBalcon" /> Balcon</label>
+        <label><input type="checkbox" id="appartementClim" /> Climatisation</label>
+        <label><input type="checkbox" id="appartementWifi" /> Wi-Fi</label>
+
+        <button type="submit">Ajouter</button>
         <button type="button" id="appartementCancel" style="display:none;">Annuler</button>
       </form>
+
       <table id="appartementsTable">
-        <thead>
-          <tr>
-            <th>Nom</th><th>Résidence</th><th>Superficie</th><th>Chambres</th><th>Sdb</th><th>Actions</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
+      <thead>
+        <tr>
+          <th>Nom</th><th>Résidence</th><th>Ville</th><th>Superficie</th><th>Étage</th><th>Chambres</th><th>Salles</th><th>Sdb</th>
+          <th>Prix</th><th>Balcon</th><th>Clim</th><th>Wi-Fi</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
       </table>
     </section>
+
 
     <!-- Agents -->
     <section id="agents" class="tab-content">
@@ -82,7 +97,8 @@
       <table id="agentsTable">
         <thead>
           <tr>
-            <th>ID</th><th>Nom</th><th>Prénom</th><th>CIN</th><th>Email</th>
+            <th>ID</th><th>Nom</th><th>Prénom</th><th>CIN</th><th>Matricule</th><th>Fonction</th>
+            <th>Grade</th><th>Service</th><th>Login</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -97,12 +113,12 @@
         <input type="text" id="periodeVille" placeholder="Ville" required />
         <input type="date" id="periodeDebut" required />
         <input type="date" id="periodeFin" required />
-        <button type="submit">Ajouter / Modifier</button>
+        <button type="submit">Ajouter</button>
         <button type="button" id="periodeCancel" style="display:none;">Annuler</button>
       </form>
       <table id="periodesTable">
         <thead>
-          <tr><th>Ville</th><th>Date début</th><th>Date fin</th><th>Actions</th></tr>
+          <tr><th>Ville</th><th>Date début</th><th>Date fin</th></tr>
         </thead>
         <tbody></tbody>
       </table>
@@ -114,20 +130,21 @@
       <table id="prereservationsTable">
         <thead>
           <tr>
-            <th>ID</th><th>Agent</th><th>Appartement</th><th>Date début</th><th>Date fin</th><th>Statut</th><th>Actions</th>
+            <th>ID</th><th>CIN</th><th>Nom</th><th>Prénom</th><th>Appartement</th><th>Résidence</th>
+            <th>Ville</th><th>Prix</th><th>Date début</th><th>Date fin</th><th>Statut</th>
           </tr>
         </thead>
         <tbody></tbody>
       </table>
     </section>
 
-    <!-- Paiements -->
-    <section id="paiements" class="tab-content">
-      <h2>Gestion des Paiements</h2>
-      <table id="paiementsTable">
+    <!-- Réservations -->
+    <section id="reservations" class="tab-content">
+      <h2>Gestion des reçus de Paiements</h2>
+      <table id="reservationsTable">
         <thead>
           <tr>
-            <th>ID</th><th>Agent</th><th>Montant</th><th>Reçu</th><th>Statut</th><th>Actions</th>
+            <th>ID</th><th>id_pre_reser </th><th>Reçu paiemant</th><th>Statut</th>
           </tr>
         </thead>
         <tbody></tbody>

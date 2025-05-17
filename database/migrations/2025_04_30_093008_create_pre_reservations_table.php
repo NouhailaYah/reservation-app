@@ -25,7 +25,6 @@ return new class extends Migration
             $table->date('date_debut');
             $table->date('date_fin');
             $table->string('status')->default('en_attente');
-    
             $table->timestamps();
         });
     }
