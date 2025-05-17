@@ -1,0 +1,160 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0; padding: 0;
+  background: #f0f7f3;
+  color: #333;
+}
+
+header {
+  background: #2a7a4a;
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+header button {
+  background: #f1c40f;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+header button:hover {
+  background: #d4ac0d;
+}
+
+nav {
+  display: flex;
+  background: #d4e9d6;
+  border-bottom: 2px solid #2a7a4a;
+}
+
+nav button {
+  flex: 1;
+  border: none;
+  background: none;
+  padding: 1rem;
+  cursor: pointer;
+  font-weight: bold;
+  color: #2a7a4a;
+  transition: background 0.3s ease;
+}
+
+nav button:hover, nav button.active {
+  background: #2a7a4a;
+  color: white;
+}
+
+main {
+  padding: 2rem;
+}
+
+h2 {
+  margin-top: 0;
+  color: #2a7a4a;
+}
+
+form {
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+form input, form button {
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+form input[type="text"], form input[type="date"], form input[type="number"] {
+  flex: 1 1 150px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+form button {
+  flex: 0 0 auto;
+  background: #2a7a4a;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+form button:hover {
+  background: #1e5535;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 0 5px #ccc;
+}
+
+table th, table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+table th {
+  background: #2a7a4a;
+  color: white;
+}
+
+table tr:last-child td {
+  border-bottom: none;
+}
+
+.actions-btn {
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  margin-right: 0.25rem;
+  border: none;
+  border-radius: 3px;
+  font-weight: bold;
+  color: white;
+}
+
+.edit-btn {
+  background-color: #2980b9;
+}
+
+.delete-btn {
+  background-color: #c0392b;
+}
+
+.accept-btn {
+  background-color: #27ae60;
+}
+
+.reject-btn {
+  background-color: #e74c3c;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}

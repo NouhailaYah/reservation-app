@@ -2,33 +2,137 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard Admin - ORMVAH</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard Admin ORMVAH</title>
+  <link rel="stylesheet" href="admin.css" />
 </head>
 <body>
-  <header class="admin-header">
-    <h1>Interface Admin - ORMVAH</h1>
-
-    <button onclick="logout()">Déconnexion</button>
+  <header>
+    <h1>Dashboard Admin - ORMVAH</h1>
+    <button id="logoutBtn">Déconnexion</button>
   </header>
 
   <nav>
-    <button onclick="showSection('appartements')">Appartements</button>
-    <button onclick="showSection('residences')">Résidences</button>
-    <button onclick="showSection('agents')">Agents</button>
-    <button onclick="showSection('periodes')">Periodes</button>
-    <button onclick="showSection('reservations')">Pré-réservations</button>
-    <button onclick="showSection('paiements')">Paiements</button>
+    <button class="tab-btn active" data-target="residences">Résidences</button>
+    <button class="tab-btn" data-target="appartements">Appartements</button>
+    <button class="tab-btn" data-target="agents">Agents</button>
+    <button class="tab-btn" data-target="periodes">Périodes</button>
+    <button class="tab-btn" data-target="prereservations">Pré-réservations</button>
+    <button class="tab-btn" data-target="paiements">Paiements</button>
   </nav>
 
   <main>
-    <section id="appartements" class="admin-section"></section>
-    <section id="residences" class="admin-section" style="display: none;"></section>
-    <section id="agents" class="admin-section" style="display: none;"></section>
-    <section id="periode" class="admin-section" style="display: none;"></section>
-    <section id="reservations" class="admin-section" style="display: none;"></section>
-    <section id="paiements" class="admin-section" style="display: none;"></section>
+    <!-- Résidences -->
+ <section id="residences" class="tab-content active">
+    <h2>Gestion des Résidences</h2>
+    <div id="residence-form-container">
+      <h3>Ajouter / Modifier une Résidence</h3>
+      <form id="residence-form">
+        <input type="hidden" id="id_resid" name="id_resid" />
+        <label>
+        Ville :
+        <select id="nom_ville" name="nom_ville" required></select>
+        </label>
+        <label><input type="checkbox" id="syndic" name="syndic" /> Syndic</label>
+        <label><input type="checkbox" id="salle_sport" name="salle_sport" /> Salle de sport</label>
+        <label><input type="checkbox" id="piscine" name="piscine" /> Piscine</label>
+        <label><input type="checkbox" id="spa" name="spa" /> Spa</label>
+        <label><input type="checkbox" id="parc_aquatique" name="parc_aquatique" /> Parc aquatique</label>
+        <label><input type="checkbox" id="parking" name="parking" /> Parking</label>
+        <label><input type="checkbox" id="ascenseur" name="ascenseur" /> Ascenseur</label>
+        <label><input type="checkbox" id="service_de_blanchisserie" name="service_de_blanchisserie" /> Service de blanchisserie</label>
+        <button type="submit">Enregistrer Résidence</button>
+      </form>
+    </div>
+    <table id="residencesTable">
+    <thead>
+      <tr><th>Nom</th><th>Ville</th><th>Actions</th></tr>
+    </thead>
+    <tbody></tbody>
+    </table>
+  </section>
+
+
+    <!-- Appartements -->
+    <section id="appartements" class="tab-content">
+      <h2>Gestion des Appartements</h2>
+      <form id="appartementForm">
+        <input type="hidden" id="appartementId" />
+        <input type="text" id="appartementNom" placeholder="Nom appartement" required />
+        <input type="text" id="appartementResidence" placeholder="Résidence" required />
+        <input type="number" id="appartementSuperficie" placeholder="Superficie (m²)" required />
+        <input type="number" id="appartementNbChambres" placeholder="Nombre chambres" required />
+        <input type="number" id="appartementNbSdb" placeholder="Nombre salles de bain" required />
+        <button type="submit">Ajouter / Modifier</button>
+        <button type="button" id="appartementCancel" style="display:none;">Annuler</button>
+      </form>
+      <table id="appartementsTable">
+        <thead>
+          <tr>
+            <th>Nom</th><th>Résidence</th><th>Superficie</th><th>Chambres</th><th>Sdb</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <!-- Agents -->
+    <section id="agents" class="tab-content">
+      <h2>Informations Agents</h2>
+      <table id="agentsTable">
+        <thead>
+          <tr>
+            <th>ID</th><th>Nom</th><th>Prénom</th><th>CIN</th><th>Email</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <!-- Périodes -->
+    <section id="periodes" class="tab-content">
+      <h2>Gestion des Périodes</h2>
+      <form id="periodeForm">
+        <input type="hidden" id="periodeId" />
+        <input type="text" id="periodeVille" placeholder="Ville" required />
+        <input type="date" id="periodeDebut" required />
+        <input type="date" id="periodeFin" required />
+        <button type="submit">Ajouter / Modifier</button>
+        <button type="button" id="periodeCancel" style="display:none;">Annuler</button>
+      </form>
+      <table id="periodesTable">
+        <thead>
+          <tr><th>Ville</th><th>Date début</th><th>Date fin</th><th>Actions</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <!-- Pré-réservations -->
+    <section id="prereservations" class="tab-content">
+      <h2>Pré-réservations</h2>
+      <table id="prereservationsTable">
+        <thead>
+          <tr>
+            <th>ID</th><th>Agent</th><th>Appartement</th><th>Date début</th><th>Date fin</th><th>Statut</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <!-- Paiements -->
+    <section id="paiements" class="tab-content">
+      <h2>Gestion des Paiements</h2>
+      <table id="paiementsTable">
+        <thead>
+          <tr>
+            <th>ID</th><th>Agent</th><th>Montant</th><th>Reçu</th><th>Statut</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
   </main>
 
   <script src="admin.js"></script>
