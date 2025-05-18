@@ -13,6 +13,12 @@ use Illuminate\Support\Facades\Validator;
 
 class AgentAuthController extends Controller
 {
+    public function index()
+    {
+        $agents = Agent::all();  // récupère tous les agents de la table agents
+        return response()->json($agents);  // retourne les agents au format JSON
+    }
+    
     // Inscription de l'agent
     public function register(Request $request)
     {

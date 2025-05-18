@@ -27,10 +27,13 @@ Route::prefix('admin')->group(function () {
     });
 });
 
+Route::get('/agents', [AgentAuthController::class, 'index']);
+
 // Routes Agent
 Route::prefix('agent')->group(function () {
     Route::post('register', [AgentAuthController::class, 'register']);
     Route::post('login', [AgentAuthController::class, 'login']);
+
     
     // Routes protégées pour les agents (token nécessaire)
     Route::middleware('auth:sanctum')->group(function () {
@@ -62,4 +65,7 @@ Route::get('/villes/{nom_ville}/periode-et-appartements', [PeriodeController::cl
 
 Route::get('/pre-reservation/details', [PreReservationController::class, 'details']);
 Route::get('/periodes/ville/{nom_ville}', [PeriodeController::class, 'getByNomVille']);
+
+Route::post('/prereservations', [PrereservationController::class, 'store']);
+Route::get('/prereservations', [PrereservationController::class, 'index']);
 
