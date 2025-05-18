@@ -36,8 +36,8 @@ class PeriodeController extends Controller
     }
     public function getByNomVille($nom_ville)
     {
-        $periodes = Periode::where('nom_ville', $nom_ville)->get(['date_debut', 'date_fin']);
-        return response()->json($periodes);
+        $periodes = Periode::where('nom_ville', $nom_ville)->first(['date_debut', 'date_fin']);
+        return response()->json(['periode' => $periodes]);
     }
 
 }

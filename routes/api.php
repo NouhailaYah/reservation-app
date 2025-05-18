@@ -58,7 +58,7 @@ Route::post('/pre-reservation/details', [PreReservationController::class, 'getDe
 Route::post('/pre-reservation', [PreReservationController::class, 'store']);
 
 // Récupération des périodes et appartements par ville
-Route::get('/villes/{nom_ville}/periode-et-appartements', [VilleController::class, 'periodeEtAppartements']);
+Route::get('/villes/{nom_ville}/periode-et-appartements', [PeriodeController::class, 'getByNomVille']);
 
 Route::get('/pre-reservation/details', [PreReservationController::class, 'details']);
 Route::get('/periodes/ville/{nom_ville}', [PeriodeController::class, 'getByNomVille']);

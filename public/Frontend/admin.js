@@ -1,4 +1,4 @@
-const apiBase = 'http://localhost:8000/api'; // à adapter selon ton backend
+const apiBase = 'http://localhost:8000/api'; 
 
 // Gestion des onglets du dashboard
 const tabs = document.querySelectorAll('.tab-btn');
@@ -18,7 +18,7 @@ document.getElementById('logoutBtn').addEventListener('click', () => {
   alert('Déconnexion non implémentée, à gérer côté backend / frontend');
 });
 
-// ====== Gestion Résidences =======
+// Gestion Résidences
 const residenceForm = document.getElementById('residenceForm');
 const residenceId = document.getElementById('residenceId');
 const residenceNom = document.getElementById('residenceNom');
@@ -101,7 +101,7 @@ async function deleteResidence(id) {
 // Charger au démarrage
 fetchResidences();
 
-// ====== Gestion Appartements =======
+// Gestion Appartements 
 const appartementForm = document.getElementById('appartementForm');
 const appartementId = document.getElementById('appartementId');
 const appartementNom = document.getElementById('appartementNom');
@@ -197,7 +197,7 @@ async function deleteAppartement(id) {
 
 fetchAppartements();
 
-// ======= Gestion Agents =======
+// Gestion Agents 
 const agentsTableBody = document.querySelector('#agentsTable tbody');
 
 async function fetchAgents() {
@@ -218,7 +218,7 @@ async function fetchAgents() {
 
 fetchAgents();
 
-// ======= Gestion Périodes =======
+// Gestion Périodes 
 const periodeForm = document.getElementById('periodeForm');
 const periodeId = document.getElementById('periodeId');
 const periodeVille = document.getElementById('periodeVille');
@@ -230,7 +230,7 @@ const periodesTableBody = document.querySelector('#periodesTable tbody');
 async function fetchPeriodes() {
   const apiBaseUrl = "http://localhost:8000/api";
 }
-// --- Helper function pour créer des éléments avec classes et texte ---
+//  function pour créer des éléments avec classes et texte 
 function createElement(tag, classNames = [], text = "") {
   const el = document.createElement(tag);
   classNames.forEach(cls => el.classList.add(cls));
@@ -238,7 +238,7 @@ function createElement(tag, classNames = [], text = "") {
   return el;
 }
 
-// --- Chargement des données au chargement de la page ---
+// Chargement des données au chargement de la page 
 window.addEventListener("DOMContentLoaded", () => {
   loadResidences();
   loadAppartements();
@@ -248,9 +248,8 @@ window.addEventListener("DOMContentLoaded", () => {
   loadPaiements();
 });
 
-// ========================
+
 // Gestion des Résidences
-// ========================
 async function loadResidences() {
   const resContainer = document.getElementById("residences-list");
   resContainer.innerHTML = "Chargement...";
@@ -361,9 +360,8 @@ async function deleteResidence(id) {
   }
 }
 
-// ========================
+
 // Gestion des Appartements
-// ========================
 async function loadAppartements() {
   const aptContainer = document.getElementById("appartements-list");
   aptContainer.innerHTML = "Chargement...";
@@ -423,7 +421,7 @@ function showAppartementForm(appartement) {
   villeInput.required = true;
   form.appendChild(villeInput);
 
-  // Tu peux ajouter ici d'autres champs si besoin (superficie, nb_chambres...)
+
 
   const submitBtn = createElement("button", ["btn", "btn-submit"], appartement ? "Modifier" : "Ajouter");
   submitBtn.type = "submit";
@@ -481,9 +479,8 @@ async function deleteAppartement(id) {
   }
 }
 
-// ========================
+
 // Gestion des Agents
-// ========================
 async function loadAgents() {
   const agentsContainer = document.getElementById("agents-list");
   agentsContainer.innerHTML = "Chargement...";
@@ -504,9 +501,8 @@ async function loadAgents() {
   }
 }
 
-// ========================
+
 // Gestion des Périodes
-// ========================
 async function loadPeriodes() {
   const periodesContainer = document.getElementById("periodes-list");
   periodesContainer.innerHTML = "Chargement...";
@@ -620,9 +616,8 @@ async function deletePeriode(id) {
   }
 }
 
-// ========================
+
 // Gestion des Pré-réservations
-// ========================
 async function loadPreReservations() {
   const preResContainer = document.getElementById("prereservations-list");
   preResContainer.innerHTML = "Chargement...";
@@ -669,9 +664,8 @@ async function updatePreReservationStatus(id, status) {
   }
 }
 
-// ========================
+
 // Gestion des Paiements
-// ========================
 async function loadPaiements() {
   const paiementsContainer = document.getElementById("paiements-list");
   paiementsContainer.innerHTML = "Chargement...";

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\Confirmationpre;
 use App\Models\PreReservation;
 use Illuminate\Http\Request;
 use App\Models\Agent;
@@ -10,6 +11,8 @@ use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\Appartement;
+use Illuminate\Support\Facades\Mail;
+
 
 
 class PreReservationController extends Controller
@@ -53,39 +56,29 @@ class PreReservationController extends Controller
         $prixTotal = $nombreJours * $prixParJour;
 
          // Enregistrer la pré-réservation
-        $preReservation = PreReservation::create([
-            'CIN' => $validatedData['CIN'],
-            'nom' => $validatedData['nom'],
-            'prenom' => $validatedData['prenom'],
-            'id_appart' => $validatedData['id_appart'],
-            'id_resid' => $validatedData['id_resid'],
-            'nom_ville' => $validatedData['nom_ville'],
-            'prix' => $prixTotal,
-            'date_debut' => $validatedData['date_debut'],
-            'date_fin' => $validatedData['date_fin'],
-            'status' => 'En attente',
-        ]);
-        
-        // Envoyer un email de confirmation de pré-réservation
-        $agent = Auth::user();
-        if ($agent) {
-            $reservationDetails = [
-                'nom' => $preReservation->nom,
-                'prenom' => $preReservation->prenom,
-                'nom_ville' => $preReservation->nom_ville,
-                'id_resid' => $preReservation->id_resid,
-                'date_debut' => $preReservation->date_debut,
-                'date_fin' => $preReservation->date_fin,
-                'prix_total' => $prixTotal . ' MAD',
-            ];
-            Notification::route('mail', $agent->email)->notify(new PreReservationPendingNotification($reservationDetails));
-        }
-        
-        return response()->json([
-            'message' => 'Pré-réservation envoyée. En attente de validation. Vous recevrez un email de confirmation.',
-            'pre_reservation' => $preReservation,
-            'prix_total' => $prixTotal
-        ],201);
+       // Enregistrer la pré-réservation
+$confirmationpre = Confirmationpre::create([
+    'CIN' => $validatedData['CIN'],
+    'nom' => $validatedData['nom'],
+    'prenom' => $validatedData['prenom'],
+    'id_appart' => $validatedData['id_appart'],
+    'id_resid' => $validatedData['id_resid'],
+    'nom_ville' => $validatedData['nom_ville'],
+    'prix' => $prixTotal,
+    'date_debut' => $validatedData['date_debut'],
+    'date_fin' => $validatedData['date_fin'],
+    'status' => 'En attente',
+]);
+
+// Envoi de l'email après création
+Mail::to('nouhailayahyaoui05@gmail.com')->send(new \App\Mail\Confirmationpre($confirmationpre));
+
+return response()->json([
+    'message' => 'Pré-réservation envoyée. En attente de validation. Vous recevrez un email de confirmation.',
+    'pre_reservation' => $confirmationpre,
+    'prix_total' => $prixTotal
+], 201);
+
         
     }
 

@@ -23,16 +23,13 @@
 
   <main>
     <!-- Résidences -->
- <section id="residences" class="tab-content active">
+  <section id="residences" class="tab-content active">
     <h2>Gestion des Résidences</h2>
     <div id="residence-form-container">
       <h3>Ajouter une Résidence</h3>
       <form id="residence-form">
         <input type="hidden" id="id_resid" name="id_resid" />
-        <label>
-        Ville :
-        <select id="nom_ville" name="nom_ville" required></select>
-        </label><br>
+        <input type="text" id="periodeVille" placeholder="Ville" required />
         <label><input type="checkbox" id="syndic" name="syndic" /> Syndic</label>
         <label><input type="checkbox" id="salle_sport" name="salle_sport" /> Salle de sport</label>
         <label><input type="checkbox" id="piscine" name="piscine" /> Piscine</label>
@@ -46,9 +43,8 @@
     </div>
     <table id="residencesTable">
     <thead>
-      <tr><th>Nom</th><th>Ville</th><th>Actions</th></tr>
+      <tr><th>id_resid</th><th>Ville</th></tr>
     </thead>
-    <tbody></tbody>
     </table>
   </section>
 
@@ -86,7 +82,6 @@
           <th>Prix</th><th>Balcon</th><th>Clim</th><th>Wi-Fi</th><th>Actions</th>
         </tr>
       </thead>
-      <tbody></tbody>
       </table>
     </section>
 
@@ -101,7 +96,6 @@
             <th>Grade</th><th>Service</th><th>Login</th>
           </tr>
         </thead>
-        <tbody></tbody>
       </table>
     </section>
 
@@ -118,9 +112,8 @@
       </form>
       <table id="periodesTable">
         <thead>
-          <tr><th>Ville</th><th>Date début</th><th>Date fin</th></tr>
+          <tr><th>Ville</th><th>Date début</th><th>Date fin</th><th>Action</th></tr>
         </thead>
-        <tbody></tbody>
       </table>
     </section>
 
@@ -131,10 +124,9 @@
         <thead>
           <tr>
             <th>ID</th><th>CIN</th><th>Nom</th><th>Prénom</th><th>Appartement</th><th>Résidence</th>
-            <th>Ville</th><th>Prix</th><th>Date début</th><th>Date fin</th><th>Statut</th>
+            <th>Ville</th><th>Prix</th><th>Date début</th><th>Date fin</th><th>Statut</th><th>Action</th>
           </tr>
         </thead>
-        <tbody></tbody>
       </table>
     </section>
 
@@ -147,11 +139,9 @@
             <th>ID</th><th>id_pre_reser </th><th>Reçu paiemant</th><th>Statut</th>
           </tr>
         </thead>
-        <tbody></tbody>
       </table>
     </section>
   </main>
-
   <script src="admin.js"></script>
 </body>
 </html>
