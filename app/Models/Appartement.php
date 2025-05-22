@@ -33,5 +33,10 @@ class Appartement extends Model
     {
         return $this->hasMany(PreReservation::class, 'id_appart');
     }
+
+    public function periodes()
+    {
+        return $this->hasMany(Periode::class, 'ville_id', 'ville_id');
+    }
 }
 

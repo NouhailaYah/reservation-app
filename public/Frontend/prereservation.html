@@ -14,43 +14,40 @@
         <form id="pre-reservation-form">
             <div>
                 <label for="cin"><strong>CIN :</strong></label>
-                <input type="text" id="cin" required>
+                <input type="text" id="cin" readonly>
             </div>
             <div>
                 <label for="nom"><strong>Nom :</strong></label>
-                <input type="text" id="nom" required>
+                <input type="text" id="nom" readonly>
             </div>
             <div>
                 <label for="prenom"><strong>Prénom :</strong></label>
-                <input type="text" id="prenom" required>
+                <input type="text" id="prenom" readonly>
             </div>
             <div>
                 <label><strong>Appartement :</strong></label>
-                <p id="appartement-details">N/A</p>
+                <input type="text" id="id_appart" readonly>
             </div>
             <div>
                 <label><strong>Résidence :</strong></label>
-                <p id="residence-details">N/A</p>
+                <input type="text" id="id_resid" readonly>
             </div>
             <div>
                 <label><strong>Ville :</strong></label>
-                <p id="ville-details">N/A</p>
+                <input type="text" id="nom_ville" readonly>
             </div>
             <div>
-                <label><strong>Date de début :</strong></label>
-                <p id="date_debut_details">N/A</p>
-            </div>
-            <div>
-                <label><strong>Date de fin :</strong></label>
-                <p id="date_fin_details">N/A</p>
+                <label><strong>Période :</strong></label>
+                <input type="text" id="periode" readonly>
             </div>
             <div>
                 <label><strong>Prix total :</strong></label>
-                <p id="prix-details">N/A</p>
+                <span id="prix-details"></span>
             </div>
             <div>
                 <label><strong>Status :</strong></label>
-                <p id="status-details">En attente</p>
+                <p id="status-details">En attente
+                </p>
             </div>
 
             <button type="submit" id="confirm-reservation-btn">Confirmer la pré-réservation</button>

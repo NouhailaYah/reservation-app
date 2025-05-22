@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // détails de l'appart, résidence, ville ...
     fetchReservationDetails();
+    fetchAgents();
+    fetchAppartements();
+    fetchResidences();
 
     document.getElementById("pre-reservation-form").addEventListener("submit", function(event) {
         event.preventDefault();
@@ -10,38 +12,74 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // Fonction pour récupérer les détails de pré-réservation (ville, appartement, etc.)
 function fetchReservationDetails() {
-    fetch("http://localhost:8000/api/pre-reservation/details")
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById("appartement-details").textContent = data.id_appart;
-            document.getElementById("residence-details").textContent = data.id_resid;
-            document.getElementById("ville-details").textContent = data.nom_ville;
-            document.getElementById("date_debut_details").textContent = data.date_debut;
-            document.getElementById("date_fin_details").textContent = data.date_fin;
+  const storedAppartement = localStorage.getItem("selected_appartement");
+  if (!storedAppartement) {
+    console.error("Aucun appartement sélectionné.");
+    return;
+  }
+  const data = JSON.parse(storedAppartement);
+  // Remplir les champs du formulaire
+  document.getElementById("id_appart").value = data.id_appart;
+  document.getElementById("id_resid").value = data.id_resid;
+  document.getElementById("nom_ville").value = data.nom_ville;
 
-             // Calculer le prix total automatiquement
-            const dateDebut = new Date(data.date_debut);
-            const dateFin = new Date(data.date_fin);
-            const prixParNuit = data.prix;
-            const nombreJours = Math.max(1, (dateFin - dateDebut) / (1000 * 60 * 60 * 24));// une journée complète en millisecondes.
-            const prixTotal = prixParNuit * nombreJours;
-            document.getElementById("prix-details").textContent = prixTotal + " MAD";
+  const periodeSelect = document.getElementById("periode");
+  const valeurPeriode = `${data.date_debut}|${data.date_fin}`;
+
+   const interval = setInterval(() => {
+    const options = Array.from(periodeSelect.options);
+    const found = options.find(option => option.value === valeurPeriode);
+    if (found) {
+      periodeSelect.value = valeurPeriode;
+      clearInterval(interval); 
+     // Calcul du prix ici, une fois la période bien sélectionnée
+      const [dateDebut, dateFin] = valeurPeriode.split("|");
+      const date_Debut = new Date(dateDebut);
+      const date_Fin = new Date(dateFin);
+
+      if (!isNaN(date_Debut) && !isNaN(date_Fin)) {
+        const nombreJours = Math.max(1, (date_Fin - date_Debut) / (1000 * 60 * 60 * 24));
+        const prixTotal = data.prix * nombreJours;
+        document.getElementById("prix").textContent = prixTotal + " MAD";
+      } else {
+        document.getElementById("prix").textContent = "Erreur période";
+      }
+    }
+  });
+}
+
+function fetchAgents() {
+    const token = localStorage.getItem("agent_token");
+    if (!token) {
+        alert("Vous devez être connecté pour accéder à cette page.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    fetch("http://localhost:8000/api/agent/me", {
+        headers: {
+            Authorization: "Bearer " + token
+        }
+    })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("CIN").value = data.CIN;
+            document.getElementById("nom").value = data.nom;
+            document.getElementById("prenom").value = data.prenom;
         })
         .catch(error => {
-            console.error("Erreur lors de la récupération des détails :", error);
+            console.error("Erreur lors du chargement des infos agent :", error);
         });
 }
 
-// Fonction pour soumettre la pré-réservation
 function submitPreReservation() {
     const CIN = document.getElementById("CIN").value;
     const nom = document.getElementById("nom").value;
     const prenom = document.getElementById("prenom").value;
-    const id_appart = document.getElementById("appartement-details").textContent;
-    const id_resid = document.getElementById("residence-details").textContent;
-    const nom_ville = document.getElementById("ville-details").textContent;
-    const date_debut = document.getElementById("date_debut_details").textContent;
-    const date_fin = document.getElementById("date_fin_details").textContent;
+    const id_appart = document.getElementById("id_appart").value;
+    const id_resid = document.getElementById("id_resid").value;
+    const nom_ville = document.getElementById("nom_ville").value;
+    const [date_debut, date_fin] = document.getElementById("periode").value.split("|");
 
     const reservationData = {
         CIN,
@@ -58,7 +96,7 @@ function submitPreReservation() {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + localStorage.getItem("token")
+            "Authorization": "Bearer " + localStorage.getItem("agent_token")
         },
         body: JSON.stringify(reservationData)
     })

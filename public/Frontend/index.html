@@ -2,19 +2,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ORMVAH - Réservation Appartements</title>
+  <title>ORMVAH - Réservation Appartements</title>                 
   <link rel="stylesheet" href="style.css" />
-  <!-- CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-  <!-- JS -->
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 <body>
 
   <header>
     <div class="nav">
       <div class="logo">ORMVAH</div>
-      <div id="user-welcome" style="font-weight: bold; margin-right: 15px;"></div>
       <div class="auth-links" id="auth-links">
         <a href="login.html" id="loginLink">Se connecter</a>
         <a href="register.html" id="registerLink">S'inscrire</a>
@@ -24,26 +19,39 @@
     </div>
   </header>
   
+  <div id="user-welcome-container">
+        <p id="user-welcome" style="text-align:center; font-size: 1.2em; color: #2e7d32;"></p>
+  </div>
   <div class="search-box">
     <form id="searchForm">
       <div class="search-fields">
-        <input type="text" id="ville" placeholder="Où allez-vous ?" list="villes" required />
-        <input type="date" id="periode" />
-        <button type="submit">Rechercher</button>
+        <label for="ville">Ville :</label>
+        <select id="nom_ville" name="ville" required>
+          <option value="">--Choisissez une ville--</option>
+          <option value="Rabat">Rabat</option>
+          <option value="Agadir">Agadir</option>
+          <option value="Fès">Fès</option>
+          <option value="Ifrane">Ifrane</option>
+          <option value="Marrakech">Marrakech</option>
+          <option value="El Jadida">El Jadida</option>
+          <option value="Casablanca">Casablanca</option>
+          <option value="Meknès">Meknès</option>
+          <option value="Tanger">Tanger</option>
+          <option value="Safi">Safi</option>
+          <option value="Ouarzazate">Ouarzazate</option>
+          <option value="Azrou">Azrou</option>
+          <option value="kénitra">kénitra</option>
+          <option value="Tétouan">Tétouan</option>
+        </select>
+        <label for="periode">Période :</label>
+        <select id="periode" required>
+            <option value="">--Choisissez une période--</option>
+        </select>
+        <button id="rechercherBtn" class="btn btn-success" type="submit">Rechercher</button>
       </div>
     </form>
-    <datalist id="villes">
-      <option value="Rabat">
-      <option value="Agadir">
-      <option value="Fès">
-      <option value="Ifrane">
-      <option value="Marrakech">
-      <option value="El Jadida">
-      <option value="Casablanca">
-    </datalist>
   </div>
 
-  <p id="periode"></p>
 
   <div id="appartements" class="apartments-grid"></div>
 
@@ -54,10 +62,34 @@
       <div id="modal-images" class="gallery"></div>
       <div id="modal-description"></div>
       <div id="modal-residence"></div>
+      <div id="modal-periode"></div>
     </div>
   </div>
 
-  <script src="script.js" defer></script>
-  
+  <footer class="footer">
+    <div class="footer-social">
+      <h4>Suivez-nous</h4>
+      <a href="https://www.instagram.com/ormvah" target="_blank">
+          <img src="Instagram.jpg" alt="Instagram" width="24" />
+      </a>
+      <a href="https://www.facebook.com/p/ormvah" target="_blank">
+        <img src="fb.jpg" alt="Facebook" width="24" />
+      </a>
+      <a href="https://www.linkedin.com/company/ormvah" target="_blank">
+        <img src="linkedin.jpg" alt="LinkedIn" width="24" />
+      </a>
+    </div>
+    <div class="footer-info">
+      <h4>Informations</h4>
+        <p> 📍 Adresse : Siège ORMVAH, Maroc</p>
+        <p> 📞Téléphone : +212 05244-49597</p>
+        <p> 📧 Email : contact@ormvah.</p>
+        <p> 🌐 Site : <a href="https://ormvah.com" target="_blank">www.ormvah.com</a></p>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script src="appartement.js"></script>
+
 </body>
 </html>

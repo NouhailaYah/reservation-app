@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Réservation Finale - ORMVAH</title>
+  <link rel="stylesheet" href="reservation.css" />
+</head>
+<body>
+
+  <div class="reservation-container">
+    <h1>Finaliser votre réservation</h1>
+
+    <form id="reservationForm" enctype="multipart/form-data">
+      <input type="hidden" id="id_pre_reser" name="id_pre_reser" value="" />
+
+      <label for="recu_paiement">Uploader votre reçu de paiement :</label>
+      <input type="file" id="recu_paiement" name="recu_paiement" accept="image/*,application/pdf" required />
+
+      <div id="feedback" class="feedback"></div>
+
+      <button type="submit">Envoyer la réservation</button>
+    </form>
+  </div>
+
+  <script src="reservation.js"></script>
+</body>
+</html>

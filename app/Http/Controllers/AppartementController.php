@@ -9,13 +9,38 @@ use App\Models\Image;
 
 class AppartementController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return Appartement::with(['ville', 'residence'])->get();
-        $appartements = Appartement::with('images')->get();
+        $query = Appartement::with(['images', 'residence.ville']);
+        // Filtre par ville
+        if ($request->has('ville')) {
+            $query->whereHas('residence', function ($q) use ($request) {
+                $q->whereHas('ville', function ($q2) use ($request) {
+                    $q2->where('nom_ville', $request->ville);
+                });
+        });
+        }
+        // Filtre par période 
+        if ($request->has(['date_debut', 'date_fin'])) {
+            $dateDebut = $request->date_debut;
+            $dateFin = $request->date_fin;
 
+            $query->whereDoesntHave('prereservations', function ($q) use ($dateDebut, $dateFin) {
+                $q->where(function ($q2) use ($dateDebut, $dateFin) {
+                    $q2->whereBetween('date_debut', [$dateDebut, $dateFin])
+                        ->orWhereBetween('date_fin', [$dateDebut, $dateFin])
+                        ->orWhere(function ($q3) use ($dateDebut, $dateFin) {
+                        $q3->where('date_debut', '<=', $dateDebut)
+                        ->where('date_fin', '>=', $dateFin);
+                        });
+                });
+
+            });
+        }
+        $appartements = $query->get();
         return response()->json($appartements);
     }
+
 
     public function store(Request $request)
     {

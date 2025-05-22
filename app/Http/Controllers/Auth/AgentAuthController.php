@@ -84,11 +84,16 @@ class AgentAuthController extends Controller
         ], 200);
     }
 
+    public function me(Request $request)
+    {
+    // Renvoie l'agent connecté via le middleware auth
+        return response()->json($request->user());
+    }
 
     // Déconnexion
     public function logout(Request $request)
     {
-        $request->agent()->currentAccessToken()->delete();
+        $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'Déconnexion réussie']);
     }
 }

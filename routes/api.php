@@ -45,9 +45,10 @@ Route::prefix('agent')->group(function () {
 Route::apiResource('villes', VilleController::class);
 Route::apiResource('residences', ResidenceController::class);
 Route::apiResource('appartements', AppartementController::class);
-Route::apiResource('periodes', PeriodeController::class);
+//Route::apiResource('periodes', PeriodeController::class);
 Route::apiResource('pre-reservations', PreReservationController::class);
 Route::apiResource('reservations', ReservationController::class);
+
 
 // Gestion des images
 Route::post('images', [ImageController::class, 'store']);
@@ -58,14 +59,24 @@ Route::get('/periodes/ville/{nom_ville}', [PeriodeController::class, 'getPeriode
 
 // Pré-réservations
 Route::post('/pre-reservation/details', [PreReservationController::class, 'getDetails']);
-Route::post('/pre-reservation', [PreReservationController::class, 'store']);
+
 
 // Récupération des périodes et appartements par ville
 Route::get('/villes/{nom_ville}/periode-et-appartements', [PeriodeController::class, 'getByNomVille']);
 
 Route::get('/pre-reservation/details', [PreReservationController::class, 'details']);
 Route::get('/periodes/ville/{nom_ville}', [PeriodeController::class, 'getByNomVille']);
+Route::get('/villes/{nom_ville}/periodes', [PeriodeController::class, 'getPeriodesByVille']);
 
-Route::post('/prereservations', [PrereservationController::class, 'store']);
-Route::get('/prereservations', [PrereservationController::class, 'index']);
+Route::post('/periodes', [PeriodeController::class, 'store']);
+Route::get('/periodes', [PeriodeController::class, 'index']);
+
+Route::get('/appartements', [AppartementController::class, 'index']);
+
+Route::get('/periodes/{nom_ville}', [PeriodeController::class, 'getByVille']);
+Route::post('/appartements/{id}/images', [ImageController::class, 'store']);
+
+
+
+
 

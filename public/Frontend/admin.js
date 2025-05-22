@@ -117,18 +117,28 @@ function loadPeriodes() {
   fetch("http://localhost:8000/api/periodes")
     .then((res) => res.json())
     .then((data) => {
-      const table = document.getElementById("periodesTable").querySelector("tbody") || document.createElement("tbody");
+      const table = document.querySelector("#periodesTable tbody") || document.createElement("tbody");
       table.innerHTML = "";
       data.forEach((p) => {
-        table.innerHTML += `
-          <tr>
-            <td>${p.ville}</td><td>${p.date_debut}</td><td>${p.date_fin}</td>
-            <td><button data-id="${p.id}" class="delete-periode">Supprimer</button></td>
-          </tr>`;
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${p.nom_ville}</td>
+          <td>${p.date_debut}</td>
+          <td>${p.date_fin}</td>
+          <td>
+            <button onclick="editPeriode(${p.id}, '${p.nom_ville}', '${p.date_debut}', '${p.date_fin}')">Modifier</button>
+            <button onclick="deletePeriode(${p.id})">Supprimer</button>
+          </td>
+        `;
+        table.appendChild(row);
       });
+
       document.getElementById("periodesTable").appendChild(table);
     });
 }
+
+
+
 
 // Pré-réservations
 function loadPreReservations() {
@@ -181,7 +191,7 @@ function setupFormSubmissions() {
   document.getElementById("residenceform").addEventListener("submit", (e) => {
     e.preventDefault();
     const data = {
-      ville: document.getElementById("periodeVille").value,
+      nom_ville: document.getElementById("periodeVille").value,
       syndic: document.getElementById("syndic").checked,
       salle_sport: document.getElementById("salle_sport").checked,
       piscine: document.getElementById("piscine").checked,
@@ -207,21 +217,29 @@ function setupFormSubmissions() {
   document.getElementById("periodeForm").addEventListener("submit", (e) => {
     e.preventDefault();
     const data = {
-      ville: document.getElementById("periodeVille").value,
+      nom_ville: document.getElementById("periodeVille").value,
       date_debut: document.getElementById("periodeDebut").value,
       date_fin: document.getElementById("periodeFin").value
     };
-    fetch("http://localhost:8000/api/periodes", {
+    fetch("http://localhost:8000/api/periodes",{
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
     })
-      .then((res) => res.json())
-      .then(() => {
+      .then((response) =>response.json())
+      .then((data) => {
+        if (data.message) {
+          alert(data.message);
+        } else {
+          alert("Opération réussie.");
+        }
+        document.getElementById("periodeForm").reset();
         loadPeriodes();
-        alert("Période enregistrée !");
-        e.target.reset();
-      });
+      })
+      .catch((error) => {
+          alert("Une erreur s'est produite.");
+          console.error(error);
+      })
   });
 }
 
